@@ -1,0 +1,200 @@
+/* ═══════════════════════════════════════════
+   A1 WINDOWS — Custom Styles
+   Tailwind CDN handles utility classes;
+   this file covers gradients, animations,
+   patterns, and component-specific styles.
+   ═══════════════════════════════════════════ */
+
+/* ─── Base ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* ─── Navbar height utility ─── */
+.h-18 {
+  height: 4.5rem;
+}
+
+/* ─── Hero Gradient ─── */
+.hero-gradient {
+  background: linear-gradient(
+    135deg,
+    #0f172a 0%,
+    #1e3a5f 35%,
+    #1e40af 65%,
+    #2563eb 100%
+  );
+}
+
+/* ─── CTA Section Gradient ─── */
+.cta-gradient {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(30, 64, 175, 0.2) 0%, transparent 50%);
+}
+
+/* ─── Grid pattern overlay ─── */
+.hero-grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Text gradient for hero emphasis ─── */
+.text-gradient-light {
+  background: linear-gradient(135deg, #93c5fd 0%, #bfdbfe 50%, #dbeafe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Hamburger menu animation ─── */
+.hamburger-line {
+  display: block;
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background-color: #1e293b;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hamburger-line-1 {
+  transform: translateY(-6px);
+}
+
+.hamburger-line-2 {
+  transform: translateY(0);
+}
+
+.hamburger-line-3 {
+  transform: translateY(6px);
+}
+
+/* Active state */
+.menu-open .hamburger-line-1 {
+  transform: rotate(45deg);
+}
+
+.menu-open .hamburger-line-2 {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.menu-open .hamburger-line-3 {
+  transform: rotate(-45deg);
+}
+
+/* ─── Mobile Menu ─── */
+.mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu.open {
+  max-height: 400px;
+}
+
+/* ─── Scroll-triggered reveal animations ─── */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.reveal-up:nth-child(2) { transition-delay: 0.08s; }
+.reveal-up:nth-child(3) { transition-delay: 0.16s; }
+.reveal-up:nth-child(4) { transition-delay: 0.24s; }
+
+/* ─── Navbar shadow on scroll ─── */
+.navbar-scrolled {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Service card image placeholder sizes ─── */
+.h-18 {
+  height: 4.5rem;
+}
+
+/* ─── Focus styles ─── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Form input autofill styling ─── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f8fafc inset;
+  -webkit-text-fill-color: #0f172a;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ─── Smooth hover for service cards ─── */
+.service-card {
+  will-change: transform, box-shadow;
+}
+
+/* ─── Selection color ─── */
+::selection {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Custom scrollbar (webkit) ─── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
