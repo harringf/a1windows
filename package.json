@@ -1,0 +1,25 @@
+{
+  "name": "a1windows",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./css/tailwind.input.css -o ./css/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./css/tailwind.input.css -o ./css/tailwind.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harringf/a1windows.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/harringf/a1windows/issues"
+  },
+  "homepage": "https://github.com/harringf/a1windows#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
