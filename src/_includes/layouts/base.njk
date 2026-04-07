@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or "A1 Windows | Window & Door Replacement in Marietta, GA" }}</title>
+  <meta name="description" content="{{ description or "Premium window and door replacement in Greater Atlanta. Lifetime warranty, ENERGY STAR rated, no high-pressure sales. Free consultation — call (678) 999-9999." }}">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind (built) -->
+  <link rel="stylesheet" href="/css/tailwind.css">
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="font-body text-slate-600 bg-white antialiased">
+
+  <!-- Skip to Content -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:outline-none">
+    Skip to main content
+  </a>
+
+  {% include "partials/navbar.njk" %}
+
+  <main id="main-content">
+    {{ content | safe }}
+  </main>
+
+  {% include "partials/footer.njk" %}
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Main JS -->
+  <script src="/js/main.js"></script>
+</body>
+</html>

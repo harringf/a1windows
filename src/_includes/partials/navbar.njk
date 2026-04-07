@@ -1,0 +1,65 @@
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- NAVBAR                                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md transition-shadow duration-300">
+    <nav aria-label="Main navigation" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-18 lg:h-20">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2 group" aria-label="A1 Windows — Home">
+          <div class="w-10 h-10 bg-brand-500 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="2" y1="12" x2="22" y2="12"/>
+            </svg>
+          </div>
+          <span class="font-heading font-bold text-2xl text-brand-900 tracking-tight">A1 <span class="text-gradient-brand">Windows</span></span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex items-center gap-1">
+          <a href="/#services" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Windows</a>
+          <a href="/#services" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Doors</a>
+          <a href="/#why-us" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">About</a>
+          <a href="/#testimonials" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Reviews</a>
+        </div>
+
+        <!-- Desktop Right -->
+        <div class="hidden lg:flex items-center gap-4">
+          <a href="tel:+16789999999" class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-brand-500 transition-colors">
+            <i data-lucide="phone" class="w-4 h-4"></i>
+            (678) 999-9999
+          </a>
+          <a href="/#quote" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-brand-500/25 active:scale-[0.98]">
+            Get Free Quote
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-toggle" class="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation menu">
+          <span class="hamburger-line hamburger-line-1"></span>
+          <span class="hamburger-line hamburger-line-2"></span>
+          <span class="hamburger-line hamburger-line-3"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu lg:hidden" aria-hidden="true">
+      <div class="px-4 pb-6 pt-2 space-y-1 border-t border-slate-100">
+        <a href="tel:+16789999999" class="flex items-center gap-3 px-4 py-3 bg-brand-50 rounded-xl text-brand-700 font-semibold text-base mb-3">
+          <i data-lucide="phone" class="w-5 h-5"></i>
+          (678) 999-9999
+        </a>
+        <a href="/#services" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Windows</a>
+        <a href="/#services" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Doors</a>
+        <a href="/#why-us" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">About</a>
+        <a href="/#testimonials" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Reviews</a>
+        <div class="pt-3">
+          <a href="/#quote" class="block text-center bg-brand-500 hover:bg-brand-600 text-white font-semibold px-5 py-3.5 rounded-xl transition-all duration-200">
+            Get Your Free Quote
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
