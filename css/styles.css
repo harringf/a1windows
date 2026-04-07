@@ -53,6 +53,22 @@ body {
   background-clip: text;
 }
 
+/* ─── Brand gradient for "Windows" wordmark ─── */
+.text-gradient-brand {
+  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Lighter variant for footer (dark background) */
+.text-gradient-brand-light {
+  background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 50%, #dbeafe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ─── Hamburger menu animation ─── */
 .hamburger-line {
   display: block;
