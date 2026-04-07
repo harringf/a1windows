@@ -3,8 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title or "A1 Windows | Window & Door Replacement in Marietta, GA" }}</title>
-  <meta name="description" content="{{ description or "Premium window and door replacement in Greater Atlanta. Lifetime warranty, ENERGY STAR rated, no high-pressure sales. Free consultation — call (678) 999-9999." }}">
+
+  {# ─────────── Title & description ─────────── #}
+  {% set pageTitle = title or (site.title + " | " + site.tagline) %}
+  {% set pageDescription = description or site.description %}
+  <title>{{ pageTitle }}</title>
+  <meta name="description" content="{{ pageDescription }}">
+
+  {# ─────────── Canonical URL ─────────── #}
+  {% set absoluteUrl = site.url + page.url %}
+  <link rel="canonical" href="{{ absoluteUrl }}">
+
+  {# ─────────── Open Graph ─────────── #}
+  {% set ogImagePath = ogImage or hero or site.defaultOgImage %}
+  {% set ogImageAbsolute = site.url + ogImagePath %}
+  {% set resolvedOgType = ogType %}
+  {% if not resolvedOgType %}{% if tags and "post" in tags %}{% set resolvedOgType = "article" %}{% else %}{% set resolvedOgType = "website" %}{% endif %}{% endif %}
+  <meta property="og:type" content="{{ resolvedOgType }}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:locale" content="{{ site.locale }}">
+  <meta property="og:title" content="{{ pageTitle }}">
+  <meta property="og:description" content="{{ pageDescription }}">
+  <meta property="og:url" content="{{ absoluteUrl }}">
+  <meta property="og:image" content="{{ ogImageAbsolute }}">
+  <meta property="og:image:alt" content="{{ ogImageAlt or pageTitle }}">
+
+  {# ─────────── Twitter Card ─────────── #}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ pageTitle }}">
+  <meta name="twitter:description" content="{{ pageDescription }}">
+  <meta name="twitter:image" content="{{ ogImageAbsolute }}">
+
+  {# ─────────── Structured data: LocalBusiness (site-wide) ─────────── #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "{{ site.url }}/#localbusiness",
+    "name": "{{ site.title }}",
+    "description": "{{ site.description }}",
+    "url": "{{ site.url }}",
+    "telephone": "{{ site.phoneE164 }}",
+    "email": "{{ site.author.email }}",
+    "image": "{{ site.url }}{{ site.defaultOgImage }}",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ site.address.street }}",
+      "addressLocality": "{{ site.address.city }}",
+      "addressRegion": "{{ site.address.state }}",
+      "postalCode": "{{ site.address.zip }}",
+      "addressCountry": "{{ site.address.country }}"
+    },
+    "areaServed": [
+      {%- for city in site.areaServed -%}
+        { "@type": "City", "name": "{{ city }}" }{% if not loop.last %},{% endif %}
+      {%- endfor -%}
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "{{ site.rating.value }}",
+      "reviewCount": "{{ site.rating.count }}"
+    }
+  }
+  </script>
+
+  {# ─────────── Article structured data (for blog posts) ─────────── #}
+  {% if tags and "post" in tags %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ absoluteUrl }}"
+    },
+    "headline": {{ title | dump | safe }},
+    {% if excerpt %}"description": {{ excerpt | dump | safe }},{% endif %}
+    "image": "{{ ogImageAbsolute }}",
+    "datePublished": "{{ date | isoDate }}",
+    "dateModified": "{{ date | isoDate }}",
+    "author": {
+      "@type": "Organization",
+      "name": "{{ site.title }}",
+      "url": "{{ site.url }}"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "{{ site.title }}",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ site.url }}{{ site.defaultOgImage }}"
+      }
+    }
+  }
+  </script>
+  {% endif %}
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
