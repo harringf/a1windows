@@ -4,15 +4,18 @@ module.exports = function (eleventyConfig) {
   // Plugins
   eleventyConfig.addPlugin(pluginRss);
 
-  // Pass-through static assets that 11ty shouldn't process
+  // Pass-through static assets — watch: true ensures re-copy on change during dev
   eleventyConfig.addPassthroughCopy({ "src/images": "images" });
-  eleventyConfig.addPassthroughCopy({ "src/js": "js" });
-  eleventyConfig.addPassthroughCopy({ "src/css/styles.css": "css/styles.css" });
-  eleventyConfig.addPassthroughCopy({ "src/css/tailwind.css": "css/tailwind.css" });
+  eleventyConfig.addPassthroughCopy({ "src/js": "js" }, { watch: true });
+  eleventyConfig.addPassthroughCopy({ "src/css/styles.css": "css/styles.css" }, { watch: true });
+  eleventyConfig.addPassthroughCopy({ "src/css/tailwind.css": "css/tailwind.css" }, { watch: true });
 
-  // Watch CSS and JS so changes trigger a browser reload
+  // Watch CSS and JS directories so changes trigger a browser reload
   eleventyConfig.addWatchTarget("src/css/");
   eleventyConfig.addWatchTarget("src/js/");
+
+  // Use polling for file watch (more reliable for some editors/OS)
+  eleventyConfig.setWatchThrottleWaitTime(100);
 
   // Date filter (used by post layout and blog index)
   eleventyConfig.addFilter("readableDate", (dateObj) => {

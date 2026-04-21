@@ -21,6 +21,9 @@
     initQuoteForm();
     initQuoteModal();
     initWindowDemo();
+    initCasementDemo();
+    initSliderDemo();
+    initAwningDemo();
   });
 
   // ─── Navbar Scroll Shadow ───
@@ -316,6 +319,395 @@
     startAutoplay();
 
     // Pause on hover for desktop users who want to inspect
+    demo.addEventListener('mouseenter', function () {
+      clearInterval(timer);
+    });
+    demo.addEventListener('mouseleave', function () {
+      startAutoplay();
+    });
+  }
+
+  // ─── Casement Window Interactive Demo ───
+  function initCasementDemo() {
+    var demo = document.getElementById('cm-demo');
+    if (!demo) return;
+
+    var left = document.getElementById('cm-left');
+    var right = document.getElementById('cm-right');
+    var breezeLeft = document.getElementById('cm-breeze-left');
+    var breezeRight = document.getElementById('cm-breeze-right');
+    var label = document.getElementById('cm-label');
+    var labelNum = document.getElementById('cm-label-num');
+    var labelDesc = document.getElementById('cm-label-desc');
+    var tabs = demo.querySelectorAll('.dh-tab');
+
+    var phases = [
+      {
+        num: '1',
+        desc: 'Window sealed tight',
+        left: false,
+        right: false,
+        breezeL: false,
+        breezeR: false
+      },
+      {
+        num: '2',
+        desc: 'Left panel cranks open',
+        left: true,
+        right: false,
+        breezeL: true,
+        breezeR: false
+      },
+      {
+        num: '3',
+        desc: 'Right panel cranks open',
+        left: false,
+        right: true,
+        breezeL: false,
+        breezeR: true
+      },
+      {
+        num: '4',
+        desc: 'Both panels open for max airflow',
+        left: true,
+        right: true,
+        breezeL: true,
+        breezeR: true
+      }
+    ];
+
+    var current = 0;
+    var timer = null;
+    var PHASE_DURATION = 5000;
+
+    function setPhase(index) {
+      current = index;
+      var phase = phases[index];
+
+      // Panels
+      if (phase.left) {
+        left.classList.add('cm-open');
+      } else {
+        left.classList.remove('cm-open');
+      }
+      if (phase.right) {
+        right.classList.add('cm-open');
+      } else {
+        right.classList.remove('cm-open');
+      }
+
+      // Breeze
+      if (phase.breezeL) {
+        breezeLeft.classList.add('cm-visible');
+      } else {
+        breezeLeft.classList.remove('cm-visible');
+      }
+      if (phase.breezeR) {
+        breezeRight.classList.add('cm-visible');
+      } else {
+        breezeRight.classList.remove('cm-visible');
+      }
+
+      // Label
+      labelNum.textContent = phase.num;
+      labelDesc.textContent = phase.desc;
+      label.classList.remove('dh-visible');
+      setTimeout(function () {
+        label.classList.add('dh-visible');
+      }, 150);
+
+      // Tabs
+      tabs.forEach(function (tab, i) {
+        var bar = tab.querySelector('.dh-tab-bar');
+        if (i === index) {
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          bar.style.animation = 'none';
+          bar.offsetHeight;
+          bar.style.animation = '';
+        } else {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+          bar.style.animation = 'none';
+          bar.style.width = '0%';
+        }
+      });
+    }
+
+    function startAutoplay() {
+      clearInterval(timer);
+      timer = setInterval(function () {
+        setPhase((current + 1) % phases.length);
+      }, PHASE_DURATION);
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var phaseIndex = parseInt(tab.getAttribute('data-cm-phase'), 10);
+        setPhase(phaseIndex);
+        startAutoplay();
+      });
+    });
+
+    setPhase(0);
+    startAutoplay();
+
+    demo.addEventListener('mouseenter', function () {
+      clearInterval(timer);
+    });
+    demo.addEventListener('mouseleave', function () {
+      startAutoplay();
+    });
+  }
+
+  // ─── Slider Window Interactive Demo ───
+  function initSliderDemo() {
+    var demo = document.getElementById('sl-demo');
+    if (!demo) return;
+
+    var left = document.getElementById('sl-left');
+    var right = document.getElementById('sl-right');
+    var breezeLeft = document.getElementById('sl-breeze-left');
+    var breezeRight = document.getElementById('sl-breeze-right');
+    var label = document.getElementById('sl-label');
+    var labelNum = document.getElementById('sl-label-num');
+    var labelDesc = document.getElementById('sl-label-desc');
+    var tabs = demo.querySelectorAll('.dh-tab');
+
+    var phases = [
+      {
+        num: '1',
+        desc: 'Window closed',
+        leftClass: '',
+        rightClass: '',
+        breezeL: false,
+        breezeR: false
+      },
+      {
+        num: '2',
+        desc: 'Right panel slides left to open',
+        leftClass: '',
+        rightClass: 'sl-open-left',
+        breezeL: false,
+        breezeR: true
+      },
+      {
+        num: '3',
+        desc: 'Left panel slides right to open',
+        leftClass: 'sl-open-right',
+        rightClass: '',
+        breezeL: true,
+        breezeR: false
+      },
+      {
+        num: '4',
+        desc: 'Both panels slide open for max airflow',
+        leftClass: 'sl-open-right',
+        rightClass: 'sl-open-left',
+        breezeL: true,
+        breezeR: true
+      }
+    ];
+
+    var current = 0;
+    var timer = null;
+    var PHASE_DURATION = 5000;
+
+    function setPhase(index) {
+      current = index;
+      var phase = phases[index];
+
+      // Reset panel classes
+      left.classList.remove('sl-open-right');
+      right.classList.remove('sl-open-left');
+
+      // Apply after a frame
+      requestAnimationFrame(function () {
+        if (phase.leftClass) left.classList.add(phase.leftClass);
+        if (phase.rightClass) right.classList.add(phase.rightClass);
+      });
+
+      // Breeze
+      if (phase.breezeL) {
+        breezeLeft.classList.add('cm-visible');
+      } else {
+        breezeLeft.classList.remove('cm-visible');
+      }
+      if (phase.breezeR) {
+        breezeRight.style.opacity = '1';
+      } else {
+        breezeRight.style.opacity = '0';
+      }
+
+      // Label
+      labelNum.textContent = phase.num;
+      labelDesc.textContent = phase.desc;
+      label.classList.remove('dh-visible');
+      setTimeout(function () {
+        label.classList.add('dh-visible');
+      }, 150);
+
+      // Tabs
+      tabs.forEach(function (tab, i) {
+        var bar = tab.querySelector('.dh-tab-bar');
+        if (i === index) {
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          bar.style.animation = 'none';
+          bar.offsetHeight;
+          bar.style.animation = '';
+        } else {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+          bar.style.animation = 'none';
+          bar.style.width = '0%';
+        }
+      });
+    }
+
+    function startAutoplay() {
+      clearInterval(timer);
+      timer = setInterval(function () {
+        setPhase((current + 1) % phases.length);
+      }, PHASE_DURATION);
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var phaseIndex = parseInt(tab.getAttribute('data-sl-phase'), 10);
+        setPhase(phaseIndex);
+        startAutoplay();
+      });
+    });
+
+    setPhase(0);
+    startAutoplay();
+
+    demo.addEventListener('mouseenter', function () {
+      clearInterval(timer);
+    });
+    demo.addEventListener('mouseleave', function () {
+      startAutoplay();
+    });
+  }
+
+  // ─── Awning Window Interactive Demo ───
+  function initAwningDemo() {
+    var demo = document.getElementById('aw-demo');
+    if (!demo) return;
+
+    var sash = document.getElementById('aw-sash');
+    var breeze = document.getElementById('aw-breeze');
+    var rain = document.getElementById('aw-rain');
+    var label = document.getElementById('aw-label');
+    var labelNum = document.getElementById('aw-label-num');
+    var labelDesc = document.getElementById('aw-label-desc');
+    var tabs = demo.querySelectorAll('.dh-tab');
+
+    var phases = [
+      {
+        num: '1',
+        desc: 'Window sealed tight',
+        sashClass: '',
+        breeze: false,
+        rain: false
+      },
+      {
+        num: '2',
+        desc: 'Partially open for gentle airflow',
+        sashClass: 'aw-partial',
+        breeze: true,
+        rain: false
+      },
+      {
+        num: '3',
+        desc: 'Fully open for maximum ventilation',
+        sashClass: 'aw-full',
+        breeze: true,
+        rain: false
+      },
+      {
+        num: '4',
+        desc: 'Stays open in rain — glass deflects water',
+        sashClass: 'aw-full',
+        breeze: true,
+        rain: true
+      }
+    ];
+
+    var current = 0;
+    var timer = null;
+    var PHASE_DURATION = 5000;
+
+    function setPhase(index) {
+      current = index;
+      var phase = phases[index];
+
+      // Reset sash
+      sash.classList.remove('aw-partial', 'aw-full');
+
+      requestAnimationFrame(function () {
+        if (phase.sashClass) sash.classList.add(phase.sashClass);
+      });
+
+      // Breeze
+      if (phase.breeze) {
+        breeze.classList.add('aw-visible');
+      } else {
+        breeze.classList.remove('aw-visible');
+      }
+
+      // Rain
+      if (phase.rain) {
+        rain.classList.add('aw-visible');
+      } else {
+        rain.classList.remove('aw-visible');
+      }
+
+      // Label
+      labelNum.textContent = phase.num;
+      labelDesc.textContent = phase.desc;
+      label.classList.remove('dh-visible');
+      setTimeout(function () {
+        label.classList.add('dh-visible');
+      }, 150);
+
+      // Tabs
+      tabs.forEach(function (tab, i) {
+        var bar = tab.querySelector('.dh-tab-bar');
+        if (i === index) {
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          bar.style.animation = 'none';
+          bar.offsetHeight;
+          bar.style.animation = '';
+        } else {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+          bar.style.animation = 'none';
+          bar.style.width = '0%';
+        }
+      });
+    }
+
+    function startAutoplay() {
+      clearInterval(timer);
+      timer = setInterval(function () {
+        setPhase((current + 1) % phases.length);
+      }, PHASE_DURATION);
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var phaseIndex = parseInt(tab.getAttribute('data-aw-phase'), 10);
+        setPhase(phaseIndex);
+        startAutoplay();
+      });
+    });
+
+    setPhase(0);
+    startAutoplay();
+
     demo.addEventListener('mouseenter', function () {
       clearInterval(timer);
     });

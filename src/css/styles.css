@@ -799,6 +799,746 @@ textarea:-webkit-autofill {
   100% { width: 100%; }
 }
 
+/* ─── Casement Window Scene ─── */
+
+.cm-scene {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.cm-wall {
+  position: relative;
+  width: 100%;
+  padding-top: 70%; /* wide horizontal aspect */
+  background: linear-gradient(180deg, #c9b89d 0%, #baa886 100%);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3), inset 0 0 60px rgba(0,0,0,0.05);
+}
+
+/* Stucco texture */
+.cm-wall::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 18px, rgba(0,0,0,0.03) 18px, rgba(0,0,0,0.03) 19px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 40px, rgba(0,0,0,0.02) 40px, rgba(0,0,0,0.02) 41px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Garden exterior */
+.cm-exterior {
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  right: 8%;
+  bottom: 18%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.cm-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #87CEEB 0%, #a8d8ea 40%, #c8e6c9 100%);
+}
+
+.cm-trees {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 75%;
+}
+
+.cm-tree {
+  position: absolute;
+  bottom: 0;
+}
+
+.cm-tree::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 35%, #6aaa45, #4d8a30 50%, #3a7025);
+}
+
+.cm-tree::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #5c3d2e;
+  border-radius: 2px;
+}
+
+.cm-tree-1 { left: 5%; }
+.cm-tree-1::before { width: 60px; height: 70px; bottom: 15px; left: -15px; }
+.cm-tree-1::after { width: 6px; height: 20px; }
+
+.cm-tree-2 { left: 30%; }
+.cm-tree-2::before { width: 80px; height: 95px; bottom: 20px; left: -25px; background: radial-gradient(ellipse at 45% 35%, #5a9f3e, #3d7a28 50%, #2d6020); }
+.cm-tree-2::after { width: 8px; height: 26px; }
+
+.cm-tree-3 { right: 20%; }
+.cm-tree-3::before { width: 70px; height: 80px; bottom: 18px; left: -22px; background: radial-gradient(ellipse at 40% 40%, #5ea043, #468a2e 55%, #357020); }
+.cm-tree-3::after { width: 7px; height: 22px; }
+
+.cm-tree-4 { right: 0; }
+.cm-tree-4::before { width: 55px; height: 65px; bottom: 14px; left: -18px; }
+.cm-tree-4::after { width: 6px; height: 18px; }
+
+/* Flower bed */
+.cm-flowers {
+  position: absolute;
+  bottom: 15%;
+  left: 10%;
+  right: 20%;
+  height: 12%;
+  background:
+    radial-gradient(circle at 10% 50%, #e879a0 3px, transparent 3px),
+    radial-gradient(circle at 25% 40%, #c084fc 3px, transparent 3px),
+    radial-gradient(circle at 40% 60%, #f9a8d4 3px, transparent 3px),
+    radial-gradient(circle at 55% 35%, #fbbf24 3px, transparent 3px),
+    radial-gradient(circle at 70% 55%, #e879a0 3px, transparent 3px),
+    radial-gradient(circle at 85% 45%, #c084fc 3px, transparent 3px),
+    linear-gradient(180deg, transparent 40%, #4d8a30 100%);
+  z-index: 1;
+}
+
+.cm-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 18%;
+  background: linear-gradient(180deg, #6aaa45 0%, #4d8a30 100%);
+}
+
+/* Window frame (white to match double-hung) */
+.cm-frame {
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  right: 8%;
+  bottom: 18%;
+  border: 8px solid #f5f0e8;
+  border-radius: 3px;
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #d6cfc3,
+    0 2px 10px rgba(0,0,0,0.15),
+    inset 0 0 20px rgba(0,0,0,0.05);
+  perspective: 500px;
+  perspective-origin: 70% 50%;
+}
+
+/* Center mullion (vertical divider) */
+.cm-mullion {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 6px;
+  margin-left: -3px;
+  background: linear-gradient(90deg, #e8e2d8, #f5f0e8, #e8e2d8);
+  z-index: 6;
+  box-shadow: 0 0 3px rgba(0,0,0,0.08);
+}
+
+/* Panels */
+.cm-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+/* Left panel — hinged on left, swings outward */
+.cm-panel-left {
+  left: 0;
+  width: 50%;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  z-index: 5;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* JS applies .cm-open to swing panels outward */
+.cm-panel-left.cm-open {
+  transform: rotateY(40deg);
+}
+
+/* Panel frame edges (white to match outer frame) */
+.cm-panel-frame-top,
+.cm-panel-frame-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(180deg, #f5f0e8, #e8e2d8);
+  z-index: 3;
+}
+.cm-panel-frame-top { top: 0; }
+.cm-panel-frame-bottom { bottom: 0; }
+
+.cm-panel-frame-left,
+.cm-panel-frame-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(90deg, #f5f0e8, #e8e2d8);
+  z-index: 3;
+}
+.cm-panel-frame-left { left: 0; }
+.cm-panel-frame-right { right: 0; }
+
+/* Right panel — hinged on right, swings outward (mirrored) */
+.cm-panel-right {
+  right: 0;
+  width: 50%;
+  z-index: 3;
+  transform-origin: right center;
+  transform: rotateY(0deg);
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cm-panel-right.cm-open {
+  transform: rotateY(-40deg);
+}
+
+/* Glass */
+.cm-glass {
+  position: absolute;
+  inset: 4px;
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.08) 0%,
+    rgba(255,255,255,0.03) 50%,
+    rgba(135,206,235,0.06) 100%
+  );
+  border: 2px solid #e8e2d8;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.cm-glass-closed {
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.12) 0%,
+    rgba(255,255,255,0.06) 40%,
+    rgba(135,206,235,0.1) 100%
+  );
+}
+
+/* Glass reflection */
+.cm-reflection {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 50%;
+  height: 130%;
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    rgba(255,255,255,0.2) 40%,
+    rgba(255,255,255,0.06) 50%,
+    transparent 60%
+  );
+  transform: rotate(-15deg);
+}
+
+.cm-reflection-right {
+  left: 10%;
+  width: 60%;
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    rgba(255,255,255,0.25) 35%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 60%
+  );
+}
+
+/* Handle (brass, like double-hung lock) */
+.cm-handle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 20px;
+  background: linear-gradient(180deg, #b8a88a, #a0926e);
+  border-radius: 2px;
+  z-index: 4;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.cm-handle-right {
+  left: 6px;
+  right: auto;
+}
+
+/* Sill (white/cream to match frame) */
+.cm-sill {
+  position: absolute;
+  bottom: 16.2%;
+  left: 6%;
+  right: 6%;
+  height: 10px;
+  background: linear-gradient(180deg, #f5f0e8, #e8e2d8);
+  border-radius: 0 0 2px 2px;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.cm-sill-front {
+  position: absolute;
+  bottom: 14.5%;
+  left: 5%;
+  right: 5%;
+  height: 12px;
+  background: linear-gradient(180deg, #ede7db, #ddd5c5);
+  border-radius: 0 0 3px 3px;
+  z-index: 5;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Breeze lines */
+.cm-breeze {
+  position: absolute;
+  top: 30%;
+  left: 2%;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.cm-breeze.cm-visible {
+  opacity: 1;
+}
+
+.cm-breeze-line {
+  width: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.5), transparent);
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+
+.cm-bl-1 { animation: dh-breeze-flow 1.8s ease-in-out infinite; width: 22px; }
+.cm-bl-2 { animation: dh-breeze-flow 1.8s ease-in-out 0.35s infinite; width: 30px; margin-left: 5px; }
+.cm-bl-3 { animation: dh-breeze-flow 1.8s ease-in-out 0.7s infinite; width: 18px; margin-left: 2px; }
+
+/* ─── Awning Window Scene ─── */
+
+.aw-scene {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Exterior positioned for awning (taller window, higher on wall) */
+.aw-exterior {
+  position: absolute;
+  top: 10%;
+  left: 12%;
+  right: 12%;
+  bottom: 18%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Frame */
+.aw-frame {
+  position: absolute;
+  top: 10%;
+  left: 12%;
+  right: 12%;
+  bottom: 18%;
+  border: 8px solid #f5f0e8;
+  border-radius: 3px;
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #d6cfc3,
+    0 2px 10px rgba(0,0,0,0.15),
+    inset 0 0 20px rgba(0,0,0,0.05);
+  overflow: visible;
+  perspective: 500px;
+  perspective-origin: 50% 30%;
+}
+
+/* Sash — hinged at top, bottom swings outward */
+.aw-sash {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  z-index: 3;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 1.2s ease;
+}
+
+/* JS applies these */
+.aw-sash.aw-partial {
+  transform: rotateX(25deg);
+  box-shadow: 0 15px 25px -5px rgba(0,0,0,0.15);
+}
+
+.aw-sash.aw-full {
+  transform: rotateX(42deg);
+  box-shadow: 0 25px 40px -8px rgba(0,0,0,0.25);
+}
+
+/* Glass */
+.aw-glass {
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.1) 0%,
+    rgba(255,255,255,0.04) 40%,
+    rgba(135,206,235,0.07) 100%
+  );
+  border: 2px solid #e8e2d8;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+/* Sash frame rails */
+.aw-rail {
+  position: absolute;
+  background: linear-gradient(180deg, #f5f0e8, #e8e2d8);
+  z-index: 4;
+}
+
+.aw-rail-top, .aw-rail-bottom {
+  left: 0; right: 0; height: 5px;
+}
+.aw-rail-top { top: 0; }
+.aw-rail-bottom {
+  bottom: 0;
+  transition: height 1.2s ease, background 1.2s ease;
+}
+
+.aw-rail-left, .aw-rail-right {
+  top: 0; bottom: 0; width: 5px;
+}
+.aw-rail-left { left: 0; }
+.aw-rail-right { right: 0; }
+
+/* Bottom rail thickens when tilted (visible from below) */
+.aw-sash.aw-partial .aw-rail-bottom,
+.aw-sash.aw-full .aw-rail-bottom {
+  height: 10px;
+  background: linear-gradient(180deg, #e8e2d8 0%, #d6cfc3 50%, #c4bba8 100%);
+}
+
+/* Handle */
+.aw-handle {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 6px;
+  background: linear-gradient(180deg, #b8a88a, #a0926e);
+  border-radius: 2px;
+  z-index: 5;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Reflection dims when open */
+.aw-sash.aw-partial .cm-reflection,
+.aw-sash.aw-full .cm-reflection {
+  opacity: 0.3;
+}
+
+/* Breeze — rises from below when open */
+.aw-breeze {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.aw-breeze.aw-visible {
+  opacity: 1;
+}
+
+.aw-breeze-line {
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(0deg, rgba(255,255,255,0.5), transparent);
+  border-radius: 2px;
+  display: inline-block;
+  margin: 0 8px;
+}
+
+.aw-bl-1 { animation: aw-rise 1.6s ease-in-out infinite;        height: 20px; }
+.aw-bl-2 { animation: aw-rise 1.6s ease-in-out 0.3s infinite;   height: 28px; }
+.aw-bl-3 { animation: aw-rise 1.6s ease-in-out 0.6s infinite;   height: 18px; }
+
+@keyframes aw-rise {
+  0%   { transform: translateY(0) scaleY(1);   opacity: 0.6; }
+  50%  { transform: translateY(-14px) scaleY(1.2); opacity: 1; }
+  100% { transform: translateY(-28px) scaleY(0.5); opacity: 0; }
+}
+
+/* Rain drops */
+.aw-rain {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  bottom: 40%;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+.aw-rain.aw-visible {
+  opacity: 1;
+}
+
+.aw-drop {
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background: linear-gradient(180deg, transparent, rgba(100,180,255,0.6));
+  border-radius: 0 0 2px 2px;
+  animation: aw-fall 1s linear infinite;
+}
+
+.aw-drop-1 { left: 10%; top: -5%;  animation-delay: 0s; }
+.aw-drop-2 { left: 30%; top: -8%;  animation-delay: 0.2s; }
+.aw-drop-3 { left: 50%; top: -3%;  animation-delay: 0.5s; }
+.aw-drop-4 { left: 70%; top: -7%;  animation-delay: 0.15s; }
+.aw-drop-5 { left: 85%; top: -4%;  animation-delay: 0.4s; }
+.aw-drop-6 { left: 20%; top: -10%; animation-delay: 0.7s; }
+
+@keyframes aw-fall {
+  0%   { transform: translateY(0);    opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(80px); opacity: 0; }
+}
+
+/* ─── Slider Window Scene ─── */
+
+.sl-scene {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Frame — wide horizontal, white */
+.sl-frame {
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  right: 8%;
+  bottom: 18%;
+  border: 8px solid #f5f0e8;
+  border-radius: 3px;
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #d6cfc3,
+    0 2px 10px rgba(0,0,0,0.15),
+    inset 0 0 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* Track grooves */
+.sl-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(180deg, #d6cfc3, #e8e2d8, #d6cfc3);
+  z-index: 8;
+}
+
+.sl-track-top { top: 0; }
+.sl-track-bottom { bottom: 0; }
+
+/* Panels — slide horizontally */
+.sl-panel {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 52%;
+  z-index: 5;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 3px solid #e8e2d8;
+}
+
+.sl-panel-left {
+  left: 0;
+  z-index: 5;
+  transform: translateX(0);
+}
+
+.sl-panel-right {
+  right: 0;
+  z-index: 6;
+  transform: translateX(0);
+}
+
+/* JS applies these to slide open */
+.sl-panel-right.sl-open-left {
+  transform: translateX(-42%);
+}
+
+.sl-panel-left.sl-open-right {
+  transform: translateX(42%);
+}
+
+/* Glass */
+.sl-glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.1) 0%,
+    rgba(255,255,255,0.04) 40%,
+    rgba(135,206,235,0.07) 100%
+  );
+  overflow: hidden;
+}
+
+/* Vertical muntin — hidden for clean two-pane look */
+.sl-muntin {
+  display: none;
+}
+
+/* Handles */
+.sl-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 6px;
+  background: linear-gradient(180deg, #b8a88a, #a0926e);
+  border-radius: 2px;
+  z-index: 7;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.sl-handle-right { right: 6px; }
+.sl-handle-left { left: 6px; }
+
+/* ─── Fixed Picture Window Scene ─── */
+
+.fp-scene {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Frame — single large pane, no dividers */
+.fp-frame {
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  right: 8%;
+  bottom: 18%;
+  border: 8px solid #f5f0e8;
+  border-radius: 3px;
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #d6cfc3,
+    0 2px 10px rgba(0,0,0,0.15),
+    inset 0 0 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.fp-glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.1) 0%,
+    rgba(255,255,255,0.04) 40%,
+    rgba(135,206,235,0.07) 100%
+  );
+  border: 2px solid #e8e2d8;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.fp-reflection {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 50%;
+  height: 140%;
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    rgba(255,255,255,0.22) 38%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 60%
+  );
+  transform: rotate(-15deg);
+}
+
+/* Sun rays streaming through the glass */
+.fp-sunrays {
+  position: absolute;
+  top: 14%;
+  right: 4%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.fp-ray {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(255,255,200,0.3), transparent);
+  border-radius: 0 0 50% 50%;
+  transform-origin: top center;
+  animation: fp-glow 4s ease-in-out infinite alternate;
+}
+
+.fp-ray-1 {
+  width: 30px;
+  height: 60px;
+  top: 0;
+  right: 20px;
+  transform: rotate(10deg);
+  opacity: 0.6;
+}
+
+.fp-ray-2 {
+  width: 22px;
+  height: 50px;
+  top: 5px;
+  right: 55px;
+  transform: rotate(-5deg);
+  opacity: 0.4;
+  animation-delay: 0.8s;
+}
+
+.fp-ray-3 {
+  width: 26px;
+  height: 55px;
+  top: 2px;
+  right: 85px;
+  transform: rotate(3deg);
+  opacity: 0.5;
+  animation-delay: 1.5s;
+}
+
+@keyframes fp-glow {
+  0%   { opacity: 0.3; }
+  100% { opacity: 0.7; }
+}
+
 /* ─── Quote Modal — Drawer (desktop) / Bottom Sheet (mobile) ─── */
 
 /* Backdrop */
