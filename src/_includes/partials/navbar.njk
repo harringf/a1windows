@@ -62,19 +62,19 @@
 
     <!-- ══ WINDOWS MEGA MENU ══ -->
     <div id="mega-windows" role="region" aria-label="Windows menu"
-      class="mega-panel hidden absolute top-[5rem] inset-x-0 bg-white border-t border-slate-100 shadow-2xl z-40">
+      class="mega-panel hidden absolute top-[5rem] inset-x-0 bg-white/90 backdrop-blur-md border-t border-slate-100 shadow-2xl z-40">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-5 gap-2 mb-6">
 
-          <a href="/windows/double-hung/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
-            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <a href="/windows/double-hung/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl transition-all border {% if page.url == '/windows/double-hung/' %}bg-brand-50 border-brand-300 ring-2 ring-brand-500/20{% else %}border-transparent hover:bg-brand-50 hover:border-brand-200{% endif %}">
+            <svg class="w-14 h-14 {% if page.url == '/windows/double-hung/' %}text-brand-600{% else %}text-brand-500{% endif %}" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="8" y="6" width="48" height="52" rx="2"/>
               <line x1="8" y1="32" x2="56" y2="32"/>
               <line x1="26" y1="6" x2="26" y2="58"/>
               <line x1="38" y1="6" x2="38" y2="58"/>
               <line x1="32" y1="30" x2="32" y2="34"/>
             </svg>
-            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Double Hung<br/>Windows</span>
+            <span class="text-sm font-semibold {% if page.url == '/windows/double-hung/' %}text-brand-600{% else %}text-brand-800 group-hover:text-brand-500{% endif %} leading-tight">Double Hung<br/>Windows</span>
           </a>
 
           <a href="/windows/casement/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
@@ -173,7 +173,7 @@
 
     <!-- ══ DOORS MEGA MENU ══ -->
     <div id="mega-doors" role="region" aria-label="Doors menu"
-      class="mega-panel hidden absolute top-[5rem] inset-x-0 bg-white border-t border-slate-100 shadow-2xl z-40">
+      class="mega-panel hidden absolute top-[5rem] inset-x-0 bg-white/90 backdrop-blur-md border-t border-slate-100 shadow-2xl z-40">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-5 gap-2 mb-6">
 

@@ -19,6 +19,7 @@
     initScrollReveal();
     initSmoothScroll();
     initQuoteForm();
+    initWindowDemo();
   });
 
   // ─── Navbar Scroll Shadow ───
@@ -174,6 +175,151 @@
           btn.setAttribute('aria-expanded', 'true');
         }
       });
+    });
+  }
+
+  // ─── Double Hung Window Interactive Demo ───
+  function initWindowDemo() {
+    var demo = document.getElementById('dh-demo');
+    if (!demo) return;
+
+    var upper = document.getElementById('dh-upper');
+    var lower = document.getElementById('dh-lower');
+    var frame = lower.parentElement;
+    var tiltShadow = document.getElementById('dh-tilt-shadow');
+    var breezeBot = document.getElementById('dh-breeze-bot');
+    var breezeTop = document.getElementById('dh-breeze-top');
+    var label = document.getElementById('dh-label');
+    var labelNum = document.getElementById('dh-label-num');
+    var labelDesc = document.getElementById('dh-label-desc');
+    var tabs = demo.querySelectorAll('.dh-tab');
+
+    var phases = [
+      {
+        num: '1',
+        desc: 'Bottom sash opens for fresh air',
+        lower: 'dh-open',
+        upper: '',
+        breezeBot: true,
+        breezeTop: false
+      },
+      {
+        num: '2',
+        desc: 'Top sash releases warm air',
+        lower: '',
+        upper: 'dh-open',
+        breezeBot: false,
+        breezeTop: true
+      },
+      {
+        num: '3',
+        desc: 'Both open for maximum airflow',
+        lower: 'dh-open',
+        upper: 'dh-open',
+        breezeBot: true,
+        breezeTop: true
+      },
+      {
+        num: '4',
+        desc: 'Tilts in for easy cleaning',
+        lower: 'dh-tilt',
+        upper: '',
+        breezeBot: false,
+        breezeTop: false
+      }
+    ];
+
+    var current = 0;
+    var timer = null;
+    var PHASE_DURATION = 5000; // 5 seconds per phase
+
+    function setPhase(index) {
+      current = index;
+      var phase = phases[index];
+
+      // Reset sash classes
+      lower.className = 'dh-sash dh-sash-lower';
+      upper.className = 'dh-sash dh-sash-upper';
+      frame.classList.remove('dh-frame-tilt');
+      tiltShadow.classList.remove('dh-visible');
+
+      // Apply after a frame so transitions fire
+      requestAnimationFrame(function () {
+        if (phase.lower) lower.classList.add(phase.lower);
+        if (phase.upper) upper.classList.add(phase.upper);
+        // Enable perspective on frame for tilt phase
+        if (phase.lower === 'dh-tilt') {
+          frame.classList.add('dh-frame-tilt');
+          tiltShadow.classList.add('dh-visible');
+        }
+      });
+
+      // Breeze
+      if (phase.breezeBot) {
+        breezeBot.classList.add('dh-visible');
+      } else {
+        breezeBot.classList.remove('dh-visible');
+      }
+      if (phase.breezeTop) {
+        breezeTop.classList.add('dh-visible');
+      } else {
+        breezeTop.classList.remove('dh-visible');
+      }
+
+      // Label
+      labelNum.textContent = phase.num;
+      labelDesc.textContent = phase.desc;
+      // Quick hide then show for transition
+      label.classList.remove('dh-visible');
+      setTimeout(function () {
+        label.classList.add('dh-visible');
+      }, 150);
+
+      // Tabs
+      tabs.forEach(function (tab, i) {
+        var bar = tab.querySelector('.dh-tab-bar');
+        if (i === index) {
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          // Reset and restart progress bar animation
+          bar.style.animation = 'none';
+          bar.offsetHeight; // force reflow
+          bar.style.animation = '';
+        } else {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+          bar.style.animation = 'none';
+          bar.style.width = '0%';
+        }
+      });
+    }
+
+    function startAutoplay() {
+      clearInterval(timer);
+      timer = setInterval(function () {
+        setPhase((current + 1) % phases.length);
+      }, PHASE_DURATION);
+    }
+
+    // Tab click handlers
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var phaseIndex = parseInt(tab.getAttribute('data-phase'), 10);
+        setPhase(phaseIndex);
+        startAutoplay(); // Reset timer on manual interaction
+      });
+    });
+
+    // Start
+    setPhase(0);
+    startAutoplay();
+
+    // Pause on hover for desktop users who want to inspect
+    demo.addEventListener('mouseenter', function () {
+      clearInterval(timer);
+    });
+    demo.addEventListener('mouseleave', function () {
+      startAutoplay();
     });
   }
 

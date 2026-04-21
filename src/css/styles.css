@@ -213,6 +213,592 @@ textarea:-webkit-autofill {
   transform: rotate(180deg);
 }
 
+/* ─── Double Hung Window — Interactive Demo ─── */
+/*
+ * JS-driven 4-phase slider:
+ *   Phase 0: Bottom sash slides up
+ *   Phase 1: Top sash slides down
+ *   Phase 2: Both open together
+ *   Phase 3: Bottom sash tilts in for cleaning
+ */
+
+.dh-scene {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Wall background */
+.dh-wall {
+  position: relative;
+  width: 100%;
+  padding-top: 125%;
+  background: linear-gradient(180deg, #d4c5b0 0%, #c9b89d 100%);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.3),
+    inset 0 0 60px rgba(0,0,0,0.05);
+}
+
+/* Brick/stucco texture */
+.dh-wall::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 22px,
+      rgba(0,0,0,0.03) 22px, rgba(0,0,0,0.03) 23px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 46px,
+      rgba(0,0,0,0.02) 46px, rgba(0,0,0,0.02) 47px
+    );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Exterior scene */
+.dh-exterior {
+  position: absolute;
+  top: 6%;
+  left: 12%;
+  right: 12%;
+  bottom: 18%;
+  border-radius: 2px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.dh-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #87CEEB 0%, #b8dff0 50%, #d4eaf7 100%);
+}
+
+/* Clouds */
+.dh-cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50px;
+  opacity: 0.85;
+}
+.dh-cloud::before,
+.dh-cloud::after {
+  content: '';
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+}
+
+.dh-cloud-1 {
+  width: 60px; height: 18px; top: 15%; left: -10%;
+  animation: dh-drift 25s linear infinite;
+}
+.dh-cloud-1::before { width: 28px; height: 28px; top: -14px; left: 10px; }
+.dh-cloud-1::after  { width: 20px; height: 20px; top: -8px;  left: 32px; }
+
+.dh-cloud-2 {
+  width: 45px; height: 14px; top: 28%; left: 20%;
+  animation: dh-drift 32s linear infinite;
+  animation-delay: -10s;
+}
+.dh-cloud-2::before { width: 22px; height: 22px; top: -11px; left: 8px; }
+.dh-cloud-2::after  { width: 16px; height: 16px; top: -6px;  left: 24px; }
+
+@keyframes dh-drift {
+  0%   { transform: translateX(-20px); }
+  100% { transform: translateX(350px); }
+}
+
+/* Trees */
+.dh-trees {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 55%;
+}
+.dh-tree { position: absolute; bottom: 0; }
+.dh-tree::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 40%, #5a8f3e, #3d6b2e 60%, #2d5420);
+}
+.dh-tree::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  background: #5c3d2e;
+  border-radius: 2px;
+}
+.dh-tree-1 { left: 10%; }
+.dh-tree-1::before { width: 70px; height: 80px;  bottom: 20px; left: -20px; }
+.dh-tree-1::after  { width: 8px;  height: 28px; }
+
+.dh-tree-2 { left: 45%; }
+.dh-tree-2::before { width: 90px; height: 100px; bottom: 24px; left: -30px; }
+.dh-tree-2::after  { width: 10px; height: 32px; }
+
+.dh-tree-3 { right: 5%; }
+.dh-tree-3::before { width: 60px; height: 70px;  bottom: 18px; left: -18px; }
+.dh-tree-3::after  { width: 7px;  height: 24px; }
+
+.dh-ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 20%;
+  background: linear-gradient(180deg, #6aaa45 0%, #4d8a30 100%);
+}
+
+/* ── Window frame ── */
+.dh-frame {
+  position: absolute;
+  top: 6%; left: 12%; right: 12%; bottom: 18%;
+  border: 8px solid #f5f0e8;
+  border-radius: 3px;
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #d6cfc3,
+    0 2px 10px rgba(0,0,0,0.15),
+    inset 0 0 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* ── Sash shared ── */
+.dh-sash {
+  position: absolute;
+  left: 0; right: 0;
+  height: 50%;
+  z-index: 3;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dh-sash-upper {
+  top: 0;
+  z-index: 3;
+  transform: translateY(0);
+}
+
+.dh-sash-lower {
+  bottom: 0;
+  z-index: 4;
+  transform-origin: 50% 50%;
+  transform: translateY(0);
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 1.2s ease;
+  box-shadow: none;
+}
+
+/* JS applies these state classes */
+.dh-sash-lower.dh-open    { transform: translateY(-38%); }
+.dh-sash-upper.dh-open    { transform: translateY(25%); }
+
+/* Tilt: perspective on parent frame — eye positioned at ~30% from top
+   so we look slightly down at the lower sash */
+.dh-frame.dh-frame-tilt {
+  perspective: 550px;
+  perspective-origin: 50% 30%;
+}
+
+.dh-sash-lower.dh-tilt {
+  transform: rotateX(-50deg);
+  z-index: 10;
+  box-shadow:
+    0 30px 50px -10px rgba(0,0,0,0.35),
+    0 15px 20px -5px rgba(0,0,0,0.15);
+}
+
+/*
+ * With pivot at 50%, when tilted:
+ *  - Top half swings TOWARD the viewer (you see its top surface)
+ *  - Bottom half swings AWAY from viewer (you see its underside/bottom frame)
+ */
+
+/* ── Top edge thickness — visible as the top comes toward you ── */
+.dh-sash-lower::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: linear-gradient(180deg, #f5f0e8, #ddd5c5);
+  transform-origin: bottom center;
+  transition: height 1.2s cubic-bezier(0.4,0,0.2,1),
+              top 1.2s cubic-bezier(0.4,0,0.2,1);
+  z-index: 8;
+  border-radius: 1px 1px 0 0;
+}
+
+.dh-sash-lower.dh-tilt::before {
+  height: 18px;
+  top: -18px;
+  background: linear-gradient(180deg, #ede7db 0%, #d6cfc3 50%, #c4bba8 100%);
+  box-shadow:
+    0 -2px 6px rgba(0,0,0,0.1),
+    inset 0 2px 0 rgba(255,255,255,0.5);
+}
+
+/* ── Bottom frame underside — visible as the bottom recedes away ── */
+.dh-sash-lower::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: #c4bba8;
+  transition: height 1.2s cubic-bezier(0.4,0,0.2,1),
+              bottom 1.2s cubic-bezier(0.4,0,0.2,1),
+              opacity 1.2s ease;
+  opacity: 0;
+  z-index: -1;
+}
+
+.dh-sash-lower.dh-tilt::after {
+  height: 14px;
+  bottom: -14px;
+  opacity: 1;
+  background: linear-gradient(0deg, #a09480 0%, #b5aa96 40%, #c4bba8 100%);
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* Top rail shows its depth/surface */
+.dh-sash-lower.dh-tilt .dh-sash-rail-top {
+  height: 14px;
+  background: linear-gradient(180deg, #f5f0e8 0%, #e8e2d8 40%, #d6cfc3 100%);
+  box-shadow:
+    0 -1px 3px rgba(0,0,0,0.12),
+    inset 0 2px 0 rgba(255,255,255,0.6);
+}
+
+/* Bottom rail (visible from below, darker) */
+.dh-sash-lower.dh-tilt .dh-glass {
+  background: linear-gradient(
+    180deg,
+    rgba(180,210,235,0.22) 0%,
+    rgba(255,255,255,0.18) 40%,
+    rgba(135,206,235,0.08) 100%
+  );
+  border-bottom-color: #c4bba8;
+}
+
+/* Reflection — glare shifts to a wide horizontal band */
+.dh-sash-lower.dh-tilt .dh-reflection {
+  opacity: 0.55;
+  width: 90%;
+  height: 60%;
+  top: 10%;
+  transform: rotate(-3deg);
+}
+
+/* Shadow cast onto the wall/exterior behind the tilted sash */
+.dh-tilt-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(0,0,0,0.3) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 60%);
+}
+
+.dh-tilt-shadow.dh-visible {
+  opacity: 1;
+}
+
+/* ── Glass ── */
+.dh-glass {
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.12) 0%,
+    rgba(255,255,255,0.05) 40%,
+    rgba(135,206,235,0.08) 100%
+  );
+  border: 2px solid #e8e2d8;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+/* Glass reflection */
+.dh-reflection {
+  position: absolute;
+  top: -20%; left: -20%;
+  width: 60%; height: 140%;
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    rgba(255,255,255,0.25) 40%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 60%
+  );
+  transform: rotate(-15deg);
+  transition: opacity 0.8s ease;
+}
+
+.dh-reflection-lower {
+  left: 10%;
+  opacity: 0.7;
+}
+
+/* Dim reflections when sash is moving */
+.dh-open .dh-reflection,
+.dh-tilt .dh-reflection { opacity: 0.25; }
+
+/* ── Muntin bar ── */
+.dh-muntin-v {
+  position: absolute;
+  top: 3px; bottom: 3px;
+  left: 50%; width: 5px; margin-left: -2.5px;
+  background: linear-gradient(90deg, #e8e2d8, #f5f0e8, #e8e2d8);
+  z-index: 5;
+  box-shadow: 0 0 3px rgba(0,0,0,0.08);
+}
+
+/* ── Sash rails ── */
+.dh-sash-rail {
+  position: absolute;
+  left: 0; right: 0; height: 8px;
+  background: linear-gradient(180deg, #f5f0e8, #e8e2d8);
+  z-index: 6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.dh-sash-rail-bottom { bottom: 0; }
+.dh-sash-rail-top    { top: 0; }
+
+/* ── Lock hardware ── */
+.dh-lock {
+  position: absolute;
+  top: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 8px;
+  background: linear-gradient(180deg, #b8a88a, #a0926e);
+  border-radius: 2px 2px 0 0;
+  z-index: 7;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.dh-lock::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 6px; height: 4px;
+  background: #8a7c60;
+  border-radius: 1px;
+}
+
+/* ── Frame shadow ── */
+.dh-frame-shadow {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.08);
+  z-index: 8;
+  pointer-events: none;
+}
+
+/* ── Sill ── */
+.dh-sill {
+  position: absolute;
+  bottom: 16.2%; left: 10%; right: 10%;
+  height: 10px;
+  background: linear-gradient(180deg, #f5f0e8, #e8e2d8);
+  border-radius: 0 0 2px 2px;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.dh-sill-front {
+  position: absolute;
+  bottom: 14.7%; left: 9%; right: 9%;
+  height: 12px;
+  background: linear-gradient(180deg, #ede7db, #ddd5c5);
+  border-radius: 0 0 3px 3px;
+  z-index: 5;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* ── Breeze lines ── */
+.dh-breeze {
+  position: absolute;
+  top: 20%; right: 5%;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dh-breeze-line {
+  width: 30px; height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+.dh-breeze-1 { animation: dh-breeze-flow 1.5s ease-in-out infinite;        width: 24px; }
+.dh-breeze-2 { animation: dh-breeze-flow 1.5s ease-in-out 0.3s infinite;   width: 32px; margin-left: 4px; }
+.dh-breeze-3 { animation: dh-breeze-flow 1.5s ease-in-out 0.6s infinite;   width: 20px; margin-left: 2px; }
+
+@keyframes dh-breeze-flow {
+  0%   { transform: translateX(0) scaleX(1);   opacity: 0.7; }
+  50%  { transform: translateX(12px) scaleX(1.3); opacity: 1; }
+  100% { transform: translateX(24px) scaleX(0.5); opacity: 0; }
+}
+
+/* Breeze visibility — JS toggles .dh-visible */
+.dh-breeze-bottom,
+.dh-breeze-top {
+  transition: opacity 0.6s ease;
+}
+.dh-breeze.dh-visible { opacity: 1; }
+
+/* ── Label (single, text swapped by JS) ── */
+.dh-label {
+  position: absolute;
+  bottom: 3.5%;
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  z-index: 12;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.dh-label.dh-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dh-label-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 58, 95, 0.88);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.dh-label-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  background: rgba(37, 99, 235, 0.6);
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Slider controls ── */
+.dh-controls {
+  margin-top: 16px;
+}
+
+.dh-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.dh-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dh-tab:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.dh-tab.active {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+.dh-tab-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  transition: all 0.3s;
+}
+
+.dh-tab.active .dh-tab-num {
+  background: #2563eb;
+  color: white;
+}
+
+.dh-tab-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  line-height: 1.2;
+  transition: color 0.3s;
+}
+
+.dh-tab.active .dh-tab-label {
+  color: rgba(255,255,255,0.9);
+}
+
+/* Progress bar inside each tab */
+.dh-tab-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+}
+
+.dh-tab-bar {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: #2563eb;
+  border-radius: 0 0 12px 12px;
+  transition: width 0.1s linear;
+}
+
+.dh-tab.active .dh-tab-bar {
+  animation: dh-progress 5s linear forwards;
+}
+
+@keyframes dh-progress {
+  0%   { width: 0%; }
+  100% { width: 100%; }
+}
+
 /* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   .reveal-up {
@@ -232,6 +818,10 @@ textarea:-webkit-autofill {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  /* Instant transitions for window demo */
+  .dh-sash { transition-duration: 0.01ms !important; }
+  .dh-tab-bar { animation: none !important; width: 100% !important; }
 }
 
 /* ─── Custom scrollbar (webkit) ─── */
