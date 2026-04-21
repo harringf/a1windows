@@ -10,8 +10,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/css/styles.css": "css/styles.css" });
   eleventyConfig.addPassthroughCopy({ "src/css/tailwind.css": "css/tailwind.css" });
 
-  // Watch the built tailwind.css so changes trigger a browser reload
-  eleventyConfig.addWatchTarget("src/css/tailwind.css");
+  // Watch CSS and JS so changes trigger a browser reload
+  eleventyConfig.addWatchTarget("src/css/");
+  eleventyConfig.addWatchTarget("src/js/");
 
   // Date filter (used by post layout and blog index)
   eleventyConfig.addFilter("readableDate", (dateObj) => {

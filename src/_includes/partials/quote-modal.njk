@@ -1,0 +1,101 @@
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- QUOTE MODAL — Drawer (desktop) / Sheet (mobile) -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <!-- Backdrop -->
+  <div id="quote-backdrop" class="quote-backdrop" aria-hidden="true"></div>
+
+  <!-- Drawer panel -->
+  <aside id="quote-drawer" class="quote-drawer" role="dialog" aria-modal="true" aria-label="Request a free quote" aria-hidden="true">
+
+    <!-- Close button -->
+    <button id="quote-close" class="quote-close" aria-label="Close quote form">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+
+    <!-- Drag handle (mobile only) -->
+    <div class="quote-drag-handle" aria-hidden="true">
+      <div class="quote-drag-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="quote-header">
+      <div class="flex items-center gap-3 mb-1">
+        <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center flex-shrink-0">
+          <i data-lucide="message-square" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h2 class="font-heading font-bold text-xl text-brand-900">Get Your Free Quote</h2>
+          <p class="text-sm text-slate-500">No pressure, no obligation — just honest advice.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="quote-modal-form" class="quote-form" novalidate>
+      <div class="space-y-5">
+        <div class="qm-field">
+          <input type="text" id="qm-name" name="name" required placeholder=" "
+            class="qm-input qm-float">
+          <label for="qm-name" class="qm-label">Full Name</label>
+        </div>
+        <div class="qm-field">
+          <input type="tel" id="qm-phone" name="phone" required placeholder=" "
+            class="qm-input qm-float">
+          <label for="qm-phone" class="qm-label">Phone Number</label>
+        </div>
+        <div class="qm-field">
+          <input type="email" id="qm-email" name="email" required placeholder=" "
+            class="qm-input qm-float">
+          <label for="qm-email" class="qm-label">Email Address</label>
+        </div>
+        <div class="qm-field">
+          <textarea id="qm-message" name="message" rows="3" placeholder=" "
+            class="qm-input qm-float qm-textarea"></textarea>
+          <label for="qm-message" class="qm-label">Tell us about your project</label>
+        </div>
+      </div>
+
+      <button type="submit" id="qm-submit"
+        class="mt-6 w-full inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-semibold text-base px-6 py-3.5 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-brand-500/25 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
+        <span id="qm-submit-text">Get Your Free Quote</span>
+        <i data-lucide="arrow-right" class="w-4 h-4" id="qm-submit-icon"></i>
+        <svg id="qm-spinner" class="hidden w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/>
+          <path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="opacity-75"/>
+        </svg>
+      </button>
+
+      <p class="mt-3 text-xs text-slate-400 text-center">No spam, no pressure. Your information is safe with us.</p>
+    </form>
+
+    <!-- Success state (hidden by default) -->
+    <div id="qm-success" class="quote-success hidden">
+      <div class="flex flex-col items-center text-center py-8">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+          <i data-lucide="check-circle" class="w-8 h-8 text-success"></i>
+        </div>
+        <h3 class="font-heading font-bold text-xl text-brand-900 mb-2">Thank You!</h3>
+        <p class="text-slate-500 text-sm mb-1">We've received your request.</p>
+        <p class="text-slate-500 text-sm">We'll be in touch within <strong class="text-slate-700">24 hours</strong>.</p>
+        <div class="mt-6 flex items-center gap-2 text-sm text-slate-400">
+          <span>Or call us now:</span>
+          <a href="tel:+16789999999" class="font-semibold text-brand-500 hover:text-brand-600 transition-colors">(678) 999-9999</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error state (hidden by default) -->
+    <div id="qm-error" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+      <p class="text-sm font-medium text-red-800">Something went wrong. Please call us at <a href="tel:+16789999999" class="underline">(678) 999-9999</a>.</p>
+    </div>
+
+    <!-- Phone callout at bottom -->
+    <div class="quote-phone">
+      <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
+        <i data-lucide="phone" class="w-4 h-4"></i>
+        <span>Prefer to talk?</span>
+        <a href="tel:+16789999999" class="font-semibold text-brand-500 hover:text-brand-600 transition-colors">(678) 999-9999</a>
+      </div>
+    </div>
+  </aside>

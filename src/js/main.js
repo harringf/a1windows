@@ -19,6 +19,7 @@
     initScrollReveal();
     initSmoothScroll();
     initQuoteForm();
+    initQuoteModal();
     initWindowDemo();
   });
 
@@ -383,6 +384,204 @@
         // Update URL without jumping
         history.pushState(null, null, targetId);
       });
+    });
+  }
+
+  // ─── Quote Modal (Drawer / Bottom Sheet) ───
+  function initQuoteModal() {
+    var backdrop = document.getElementById('quote-backdrop');
+    var drawer = document.getElementById('quote-drawer');
+    var closeBtn = document.getElementById('quote-close');
+    var form = document.getElementById('quote-modal-form');
+    var messageField = document.getElementById('qm-message');
+    var submitBtn = document.getElementById('qm-submit');
+    var submitText = document.getElementById('qm-submit-text');
+    var submitIcon = document.getElementById('qm-submit-icon');
+    var spinner = document.getElementById('qm-spinner');
+    var successEl = document.getElementById('qm-success');
+    var errorEl = document.getElementById('qm-error');
+
+    if (!drawer) return;
+
+    var isOpen = false;
+    var autoCloseTimer = null;
+
+    function openModal(context) {
+      isOpen = true;
+      backdrop.classList.add('open');
+      drawer.classList.add('open');
+      backdrop.setAttribute('aria-hidden', 'false');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('quote-open');
+
+      // Pre-fill context into message field
+      if (context && messageField && !messageField.value.trim()) {
+        messageField.value = 'Interested in: ' + context;
+      }
+
+      // Re-init lucide icons in the modal
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+
+      // Focus first input after transition
+      setTimeout(function () {
+        var firstInput = form.querySelector('input');
+        if (firstInput) firstInput.focus();
+      }, 400);
+    }
+
+    function closeModal() {
+      isOpen = false;
+      backdrop.classList.remove('open');
+      drawer.classList.remove('open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('quote-open');
+
+      if (autoCloseTimer) {
+        clearTimeout(autoCloseTimer);
+        autoCloseTimer = null;
+      }
+
+      // Reset form after close transition
+      setTimeout(function () {
+        form.reset();
+        form.classList.remove('hidden');
+        successEl.classList.add('hidden');
+        errorEl.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitText.textContent = 'Get Your Free Quote';
+        submitIcon.classList.remove('hidden');
+        spinner.classList.add('hidden');
+      }, 400);
+    }
+
+    // Close button
+    closeBtn.addEventListener('click', closeModal);
+
+    // Backdrop click
+    backdrop.addEventListener('click', closeModal);
+
+    // Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen) {
+        closeModal();
+      }
+    });
+
+    // Intercept all quote links
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a[href="/#quote"], a[href="#quote"], [data-open-quote]');
+      if (!link) return;
+
+      e.preventDefault();
+
+      // Get context from data attribute or from page title
+      var context = link.getAttribute('data-quote-context') || '';
+      if (!context) {
+        // Auto-detect from page — if on a product page, use the h1 text
+        var h1 = document.querySelector('h1');
+        var isProductPage = window.location.pathname.indexOf('/windows/') !== -1 ||
+                            window.location.pathname.indexOf('/doors/') !== -1;
+        if (isProductPage && h1) {
+          context = h1.textContent.replace(/\s+/g, ' ').trim();
+        }
+      }
+
+      openModal(context);
+    });
+
+    // Form submission
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var formData = {
+        name: form.querySelector('#qm-name').value.trim(),
+        phone: form.querySelector('#qm-phone').value.trim(),
+        email: form.querySelector('#qm-email').value.trim(),
+        message: form.querySelector('#qm-message').value.trim()
+      };
+
+      if (!formData.name || !formData.phone || !formData.email) return;
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitText.textContent = 'Sending...';
+      submitIcon.classList.add('hidden');
+      spinner.classList.remove('hidden');
+      errorEl.classList.add('hidden');
+
+      var API_URL = '/api/quote';
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Request failed');
+          return response.json();
+        })
+        .then(function () {
+          // Success — show thank you
+          form.classList.add('hidden');
+          successEl.classList.remove('hidden');
+
+          if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+          }
+
+          // Auto-close after 4 seconds
+          autoCloseTimer = setTimeout(closeModal, 4000);
+        })
+        .catch(function () {
+          // Error
+          errorEl.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitText.textContent = 'Get Your Free Quote';
+          submitIcon.classList.remove('hidden');
+          spinner.classList.add('hidden');
+        });
+    });
+
+    // Mobile: swipe down to dismiss
+    var startY = 0;
+    var currentY = 0;
+    var isDragging = false;
+
+    drawer.addEventListener('touchstart', function (e) {
+      // Only allow drag from the top area (drag handle or header)
+      var touch = e.touches[0];
+      var rect = drawer.getBoundingClientRect();
+      if (touch.clientY - rect.top < 60) {
+        isDragging = true;
+        startY = touch.clientY;
+        currentY = startY;
+        drawer.style.transition = 'none';
+      }
+    }, { passive: true });
+
+    drawer.addEventListener('touchmove', function (e) {
+      if (!isDragging) return;
+      currentY = e.touches[0].clientY;
+      var diff = currentY - startY;
+      if (diff > 0) {
+        drawer.style.transform = 'translateY(' + diff + 'px)';
+      }
+    }, { passive: true });
+
+    drawer.addEventListener('touchend', function () {
+      if (!isDragging) return;
+      isDragging = false;
+      drawer.style.transition = '';
+      var diff = currentY - startY;
+      if (diff > 100) {
+        closeModal();
+      } else {
+        drawer.style.transform = '';
+        if (isOpen) drawer.classList.add('open');
+      }
     });
   }
 
