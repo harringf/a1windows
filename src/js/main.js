@@ -14,6 +14,8 @@
     }
     initNavbar();
     initMobileMenu();
+    initMegaMenu();
+    initMobileAccordions();
     initScrollReveal();
     initSmoothScroll();
     initQuoteForm();
@@ -82,6 +84,96 @@
         menu.classList.remove('open');
         toggle.focus();
       }
+    });
+  }
+
+  // ─── Mega Menu (Desktop) ───
+  function initMegaMenu() {
+    var triggers = document.querySelectorAll('.mega-trigger');
+    var panels = document.querySelectorAll('.mega-panel');
+    if (!triggers.length) return;
+
+    var openPanel = null;
+
+    function closeAll() {
+      panels.forEach(function (p) {
+        p.classList.add('hidden');
+        p.classList.remove('open');
+      });
+      triggers.forEach(function (t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-expanded', 'false');
+      });
+      openPanel = null;
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var panelId = trigger.getAttribute('aria-controls');
+        var panel = document.getElementById(panelId);
+        if (!panel) return;
+
+        if (openPanel === panel) {
+          closeAll();
+          return;
+        }
+
+        closeAll();
+        panel.classList.remove('hidden');
+        // Force reflow so the transition plays
+        panel.offsetHeight;
+        panel.classList.add('open');
+        trigger.classList.add('active');
+        trigger.setAttribute('aria-expanded', 'true');
+        openPanel = panel;
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!openPanel) return;
+      var isInsidePanel = openPanel.contains(e.target);
+      var isInsideTrigger = false;
+      triggers.forEach(function (t) {
+        if (t.contains(e.target)) isInsideTrigger = true;
+      });
+      if (!isInsidePanel && !isInsideTrigger) {
+        closeAll();
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && openPanel) {
+        closeAll();
+      }
+    });
+
+    // Re-initialize Lucide icons inside mega panels
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+
+  // ─── Mobile Accordions ───
+  function initMobileAccordions() {
+    var accBtns = document.querySelectorAll('.mobile-acc-btn');
+    accBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var body = btn.nextElementSibling;
+        var chevron = btn.querySelector('.acc-chevron');
+        var isOpen = body.classList.contains('open');
+
+        if (isOpen) {
+          body.classList.remove('open');
+          chevron.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          body.classList.add('open');
+          chevron.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
     });
   }
 

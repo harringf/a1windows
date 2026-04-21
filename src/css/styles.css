@@ -114,7 +114,8 @@ body {
 }
 
 .mobile-menu.open {
-  max-height: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 /* ─── Scroll-triggered reveal animations ─── */
@@ -174,6 +175,42 @@ textarea:-webkit-autofill {
 ::selection {
   background-color: #2563eb;
   color: white;
+}
+
+/* ─── Mega Menu ─── */
+.mega-panel {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+}
+
+.mega-panel.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.mega-trigger.active {
+  color: #2563eb !important;
+  background: #eff6ff !important;
+}
+
+.mega-trigger.active .mega-chevron {
+  transform: rotate(180deg);
+}
+
+.mega-item {
+  cursor: pointer;
+}
+
+/* ─── Mobile Accordion ─── */
+.mobile-acc-body.open {
+  display: flex !important;
+}
+
+.acc-chevron.open {
+  transform: rotate(180deg);
 }
 
 /* ─── Reduced motion ─── */

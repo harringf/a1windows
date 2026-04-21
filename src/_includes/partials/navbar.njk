@@ -1,5 +1,5 @@
   <!-- ═══════════════════════════════════════════ -->
-  <!-- NAVBAR                                      -->
+  <!-- NAVBAR — mega menu for Windows & Doors   -->
   <!-- ═══════════════════════════════════════════ -->
   <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md transition-shadow duration-300">
     <nav aria-label="Main navigation" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,20 +12,35 @@
               <rect x="2" y="3" width="20" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="2" y1="12" x2="22" y2="12"/>
             </svg>
           </div>
-          <span class="font-heading font-bold text-2xl text-brand-900 tracking-tight">A1 <span class="text-gradient-brand">Windows</span></span>
+          <span class="font-heading font-bold text-2xl text-brand-800 tracking-tight">A1 <span class="text-gradient-brand">Windows</span></span>
         </a>
 
         <!-- Desktop Nav -->
-        <div class="hidden lg:flex items-center gap-1">
-          <a href="/#services" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Windows</a>
-          <a href="/#services" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Doors</a>
-          <a href="/#why-us" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">About</a>
-          <a href="/#testimonials" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Reviews</a>
-          <a href="/blog/" class="nav-link px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg transition-colors duration-200">Blog</a>
-        </div>
+        <ul class="hidden lg:flex items-center gap-0.5 list-none mx-auto" id="desktop-nav">
+
+          <!-- WINDOWS mega trigger -->
+          <li class="mega-parent relative" id="mega-windows-parent">
+            <button class="mega-trigger flex items-center gap-1 px-4 py-2 text-sm font-semibold text-brand-800 hover:text-brand-500 rounded-lg hover:bg-brand-50 transition-all" aria-expanded="false" aria-haspopup="true" aria-controls="mega-windows">
+              WINDOWS
+              <svg class="mega-chevron w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </li>
+
+          <!-- DOORS mega trigger -->
+          <li class="mega-parent relative" id="mega-doors-parent">
+            <button class="mega-trigger flex items-center gap-1 px-4 py-2 text-sm font-semibold text-brand-800 hover:text-brand-500 rounded-lg hover:bg-brand-50 transition-all" aria-expanded="false" aria-haspopup="true" aria-controls="mega-doors">
+              DOORS
+              <svg class="mega-chevron w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </li>
+
+          <li><a href="/#why-us" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg hover:bg-brand-50 transition-all">About</a></li>
+          <li><a href="/#testimonials" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg hover:bg-brand-50 transition-all">Reviews</a></li>
+          <li><a href="/blog/" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-brand-500 rounded-lg hover:bg-brand-50 transition-all">Blog</a></li>
+        </ul>
 
         <!-- Desktop Right -->
-        <div class="hidden lg:flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-4 flex-shrink-0">
           <a href="tel:+16789999999" class="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-brand-500 transition-colors">
             <i data-lucide="phone" class="w-4 h-4"></i>
             (678) 999-9999
@@ -45,6 +60,183 @@
       </div>
     </nav>
 
+    <!-- ══ WINDOWS MEGA MENU ══ -->
+    <div id="mega-windows" role="region" aria-label="Windows menu"
+      class="mega-panel hidden absolute top-[5rem] inset-x-0 bg-white border-t border-slate-100 shadow-2xl z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-5 gap-2 mb-6">
+
+          <a href="/windows/double-hung/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="6" width="48" height="52" rx="2"/>
+              <line x1="8" y1="32" x2="56" y2="32"/>
+              <line x1="26" y1="6" x2="26" y2="58"/>
+              <line x1="38" y1="6" x2="38" y2="58"/>
+              <line x1="32" y1="30" x2="32" y2="34"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Double Hung<br/>Windows</span>
+          </a>
+
+          <a href="/windows/casement/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="6" width="48" height="52" rx="2"/>
+              <line x1="32" y1="6" x2="32" y2="58"/>
+              <path d="M32 18 L20 32 L32 46"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Casement<br/>Windows</span>
+          </a>
+
+          <a href="/windows/fixed-picture/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="6" width="48" height="52" rx="2"/>
+              <rect x="16" y="14" width="32" height="36" rx="1"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Fixed Picture<br/>Windows</span>
+          </a>
+
+          <a href="/windows/slider/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="12" width="48" height="40" rx="2"/>
+              <line x1="32" y1="12" x2="32" y2="52"/>
+              <path d="M38 32 L44 32 M42 28 L46 32 L42 36"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Slider<br/>Windows</span>
+          </a>
+
+          <a href="/windows/specialty/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M32 8 L56 32 L32 56 L8 32 Z"/>
+              <path d="M32 8 L32 56 M8 32 L56 32"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Specialty<br/>Windows</span>
+          </a>
+
+          <a href="/windows/round-top/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 58 L12 28 A20 20 0 0 1 52 28 L52 58 Z"/>
+              <line x1="12" y1="40" x2="52" y2="40"/>
+              <line x1="32" y1="28" x2="32" y2="58"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Round Top<br/>Windows</span>
+          </a>
+
+          <a href="/windows/awning/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="18" width="48" height="36" rx="2"/>
+              <line x1="8" y1="32" x2="56" y2="32"/>
+              <path d="M20 18 L20 8 L44 8 L44 18"/>
+              <line x1="32" y1="8" x2="32" y2="18"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Awning<br/>Windows</span>
+          </a>
+
+          <a href="/windows/bay/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 52 L8 20 L20 10 L44 10 L56 20 L56 52 Z"/>
+              <line x1="20" y1="10" x2="20" y2="52"/>
+              <line x1="44" y1="10" x2="44" y2="52"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Bay<br/>Windows</span>
+          </a>
+
+          <a href="/windows/bow/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 52 L8 28 Q8 10 32 8 Q56 10 56 28 L56 52 Z"/>
+              <line x1="20" y1="14" x2="20" y2="52"/>
+              <line x1="44" y1="14" x2="44" y2="52"/>
+              <line x1="32" y1="8" x2="32" y2="52"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Bow<br/>Windows</span>
+          </a>
+
+          <!-- CTA tile -->
+          <a href="/#quote" class="mega-item group flex flex-col items-center justify-center text-center gap-3 p-5 rounded-2xl bg-brand-500 hover:bg-brand-600 transition-all">
+            <i data-lucide="clipboard-list" class="w-10 h-10 text-white" aria-hidden="true"></i>
+            <span class="text-sm font-bold text-white leading-tight">Get a Free<br/>Window Quote</span>
+          </a>
+        </div>
+
+        <!-- Bottom strip links -->
+        <div class="border-t border-slate-100 pt-5 flex flex-wrap gap-4">
+          <a href="/#services" class="flex items-center gap-2 text-sm font-medium text-brand-500 hover:text-brand-700 transition-colors">
+            <i data-lucide="zap" class="w-4 h-4" aria-hidden="true"></i>Window Features &amp; Options
+          </a>
+          <a href="/#services" class="flex items-center gap-2 text-sm font-medium text-brand-500 hover:text-brand-700 transition-colors">
+            <i data-lucide="layers" class="w-4 h-4" aria-hidden="true"></i>Glass Options
+          </a>
+          <a href="/#services" class="flex items-center gap-2 text-sm font-medium text-brand-500 hover:text-brand-700 transition-colors">
+            <i data-lucide="wrench" class="w-4 h-4" aria-hidden="true"></i>Window Installation
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DOORS MEGA MENU ══ -->
+    <div id="mega-doors" role="region" aria-label="Doors menu"
+      class="mega-panel hidden absolute top-[5rem] inset-x-0 bg-white border-t border-slate-100 shadow-2xl z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-5 gap-2 mb-6">
+
+          <a href="/doors/entry/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="14" y="6" width="36" height="54" rx="2"/>
+              <rect x="20" y="14" width="10" height="14" rx="1"/>
+              <rect x="34" y="14" width="10" height="14" rx="1"/>
+              <circle cx="40" cy="34" r="2" fill="currentColor"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Entry<br/>Doors</span>
+          </a>
+
+          <a href="/doors/patio/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="8" width="22" height="52" rx="2"/>
+              <rect x="34" y="8" width="22" height="52" rx="2"/>
+              <line x1="8" y1="30" x2="30" y2="30"/>
+              <line x1="34" y1="30" x2="56" y2="30"/>
+              <circle cx="31" cy="34" r="1.5" fill="currentColor"/>
+              <circle cx="33" cy="34" r="1.5" fill="currentColor"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Patio<br/>Doors</span>
+          </a>
+
+          <a href="/doors/french/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="8" width="22" height="52" rx="2"/>
+              <rect x="34" y="8" width="22" height="52" rx="2"/>
+              <rect x="12" y="14" width="14" height="18" rx="1"/>
+              <rect x="38" y="14" width="14" height="18" rx="1"/>
+              <path d="M30 34 Q32 32 34 34"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">French<br/>Doors</span>
+          </a>
+
+          <a href="/doors/sliding/" class="mega-item group flex flex-col items-center text-center gap-3 p-5 rounded-2xl hover:bg-brand-50 transition-all border border-transparent hover:border-brand-200">
+            <svg class="w-14 h-14 text-brand-500" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="6" y="8" width="52" height="52" rx="2"/>
+              <line x1="32" y1="8" x2="32" y2="60"/>
+              <path d="M36 34 L42 34 M40 30 L44 34 L40 38"/>
+            </svg>
+            <span class="text-sm font-semibold text-brand-800 group-hover:text-brand-500 leading-tight">Sliding<br/>Doors</span>
+          </a>
+
+          <!-- CTA tile -->
+          <a href="/#quote" class="mega-item group flex flex-col items-center justify-center text-center gap-3 p-5 rounded-2xl bg-brand-500 hover:bg-brand-600 transition-all">
+            <i data-lucide="clipboard-list" class="w-10 h-10 text-white" aria-hidden="true"></i>
+            <span class="text-sm font-bold text-white leading-tight">Get a Free<br/>Door Quote</span>
+          </a>
+        </div>
+
+        <div class="border-t border-slate-100 pt-5 flex flex-wrap gap-4">
+          <a href="/#services" class="flex items-center gap-2 text-sm font-medium text-brand-500 hover:text-brand-700 transition-colors">
+            <i data-lucide="info" class="w-4 h-4" aria-hidden="true"></i>Door Features &amp; Options
+          </a>
+          <a href="/#services" class="flex items-center gap-2 text-sm font-medium text-brand-500 hover:text-brand-700 transition-colors">
+            <i data-lucide="wrench" class="w-4 h-4" aria-hidden="true"></i>Door Installation
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="mobile-menu lg:hidden" aria-hidden="true">
       <div class="px-4 pb-6 pt-2 space-y-1 border-t border-slate-100">
@@ -52,8 +244,40 @@
           <i data-lucide="phone" class="w-5 h-5"></i>
           (678) 999-9999
         </a>
-        <a href="/#services" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Windows</a>
-        <a href="/#services" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Doors</a>
+
+        <!-- Windows accordion -->
+        <div>
+          <button class="mobile-acc-btn w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-brand-800 hover:bg-slate-50 rounded-xl" aria-expanded="false">
+            WINDOWS
+            <svg class="acc-chevron w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="mobile-acc-body hidden pl-4 flex-col gap-0.5">
+            <a href="/windows/double-hung/"   class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Double Hung Windows</a>
+            <a href="/windows/casement/"      class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Casement Windows</a>
+            <a href="/windows/fixed-picture/" class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Fixed Picture Windows</a>
+            <a href="/windows/slider/"        class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Slider Windows</a>
+            <a href="/windows/specialty/"     class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Specialty Windows</a>
+            <a href="/windows/round-top/"     class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Round Top Windows</a>
+            <a href="/windows/awning/"        class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Awning Windows</a>
+            <a href="/windows/bay/"           class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Bay Windows</a>
+            <a href="/windows/bow/"           class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Bow Windows</a>
+          </div>
+        </div>
+
+        <!-- Doors accordion -->
+        <div>
+          <button class="mobile-acc-btn w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-brand-800 hover:bg-slate-50 rounded-xl" aria-expanded="false">
+            DOORS
+            <svg class="acc-chevron w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="mobile-acc-body hidden pl-4 flex-col gap-0.5">
+            <a href="/doors/entry/"   class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Entry Doors</a>
+            <a href="/doors/patio/"   class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Patio Doors</a>
+            <a href="/doors/french/"  class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">French Doors</a>
+            <a href="/doors/sliding/" class="px-4 py-2.5 text-sm text-slate-600 hover:text-brand-500 hover:bg-brand-50 rounded-lg">Sliding Doors</a>
+          </div>
+        </div>
+
         <a href="/#why-us" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">About</a>
         <a href="/#testimonials" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Reviews</a>
         <a href="/blog/" class="mobile-nav-link block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-xl transition-colors">Blog</a>
