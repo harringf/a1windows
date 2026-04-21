@@ -49,10 +49,59 @@ permalink: /windows/bay/
             </div>
           </div>
 
-          <!-- Right: Image -->
+          <!-- Right: Bay Window Scene (static) -->
           <div class="reveal-up hidden lg:block mt-12 lg:mt-0">
-            <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-brand-900/30">
-              <img src="/images/windows/bay.jpg" alt="Bay window installed in a modern home" class="w-full h-auto object-cover aspect-[4/3]" loading="eager">
+            <div class="bay-scene" aria-label="Bay window illustration showing 3-panel projection">
+              <div class="cm-wall">
+
+                <!-- Garden view -->
+                <div class="bay-exterior">
+                  <div class="cm-sky"></div>
+                  <div class="cm-trees">
+                    <div class="cm-tree cm-tree-1"></div>
+                    <div class="cm-tree cm-tree-2"></div>
+                    <div class="cm-tree cm-tree-3"></div>
+                    <div class="cm-tree cm-tree-4"></div>
+                  </div>
+                  <div class="cm-flowers"></div>
+                  <div class="cm-ground"></div>
+                </div>
+
+                <!-- Bay frame — 3 panels with perspective -->
+                <div class="bay-frame">
+                  <!-- Left angled panel -->
+                  <div class="bay-panel bay-panel-left">
+                    <div class="bay-glass">
+                      <div class="cm-reflection"></div>
+                    </div>
+                  </div>
+
+                  <!-- Center panel (large, flat) -->
+                  <div class="bay-panel bay-panel-center">
+                    <div class="bay-glass bay-glass-center">
+                      <div class="cm-reflection cm-reflection-right"></div>
+                    </div>
+                  </div>
+
+                  <!-- Right angled panel -->
+                  <div class="bay-panel bay-panel-right">
+                    <div class="bay-glass">
+                      <div class="cm-reflection" style="opacity:0.4;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sill (angled to follow bay shape) -->
+                <div class="bay-sill"></div>
+                <div class="bay-sill-front"></div>
+
+                <!-- Label -->
+                <div class="dh-label dh-visible" style="opacity:1; transform:translateX(-50%);">
+                  <span class="dh-label-text">
+                    3-panel projection — light from three directions
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -65,29 +114,10 @@ permalink: /windows/bay/
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-24 items-center">
 
-          <!-- Left: Illustration -->
+          <!-- Left: Image -->
           <div class="reveal-up hidden lg:block">
-            <div class="relative bg-gradient-to-br from-brand-50 to-slate-50 rounded-3xl p-10 border border-slate-200/60">
-              <!-- Animated SVG diagram -->
-              <svg class="w-full max-w-sm mx-auto" viewBox="0 0 260 200" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <!-- Wall line -->
-                <line x1="10" y1="160" x2="250" y2="160" class="text-brand-800" stroke-width="3"/>
-                <!-- Left angled panel -->
-                <rect x="50" y="40" width="45" height="110" rx="2" class="text-brand-600" transform="rotate(-30 72.5 95)"/>
-                <!-- Center panel (larger) -->
-                <rect x="95" y="30" width="70" height="120" rx="2" class="text-brand-500"/>
-                <!-- Right angled panel -->
-                <rect x="165" y="40" width="45" height="110" rx="2" class="text-brand-600" transform="rotate(30 187.5 95)"/>
-                <!-- Angle indicators -->
-                <path d="M75 160 L60 150" class="text-brand-300" stroke-dasharray="3 2"/>
-                <path d="M185 160 L200 150" class="text-brand-300" stroke-dasharray="3 2"/>
-                <!-- Labels -->
-                <text x="130" y="95" text-anchor="middle" class="text-brand-800" fill="currentColor" stroke="none" font-size="10" font-weight="600">Center Panel</text>
-                <text x="130" y="108" text-anchor="middle" class="text-brand-400" fill="currentColor" stroke="none" font-size="8">(fixed picture)</text>
-                <text x="45" y="95" text-anchor="middle" class="text-brand-600" fill="currentColor" stroke="none" font-size="8">Side</text>
-                <text x="215" y="95" text-anchor="middle" class="text-brand-600" fill="currentColor" stroke="none" font-size="8">Side</text>
-                <text x="130" y="180" text-anchor="middle" class="text-brand-400" fill="currentColor" stroke="none" font-size="9">Projects outward at 30° or 45°</text>
-              </svg>
+            <div class="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200/60">
+              <img src="/images/windows/bay.jpg" alt="Bay window projecting outward from home exterior" class="w-full h-auto object-cover aspect-[4/3]">
             </div>
           </div>
 

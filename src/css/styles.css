@@ -1133,6 +1133,118 @@ textarea:-webkit-autofill {
 .cm-bl-2 { animation: dh-breeze-flow 1.8s ease-in-out 0.35s infinite; width: 30px; margin-left: 5px; }
 .cm-bl-3 { animation: dh-breeze-flow 1.8s ease-in-out 0.7s infinite; width: 18px; margin-left: 2px; }
 
+/* ─── Bay Window Scene ─── */
+
+.bay-scene {
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* Exterior — wider to accommodate the bay projection */
+.bay-exterior {
+  position: absolute;
+  top: 8%;
+  left: 6%;
+  right: 6%;
+  bottom: 16%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Bay frame container — uses 3D perspective to show the angled panels */
+.bay-frame {
+  position: absolute;
+  top: 8%;
+  left: 6%;
+  right: 6%;
+  bottom: 16%;
+  z-index: 2;
+  display: flex;
+  perspective: 600px;
+  perspective-origin: 50% 50%;
+}
+
+/* Shared panel styles */
+.bay-panel {
+  position: relative;
+  border: 6px solid #f5f0e8;
+  box-shadow: inset 0 0 0 1px #d6cfc3;
+  overflow: hidden;
+}
+
+/* Left angled panel — rotated inward */
+.bay-panel-left {
+  flex: 0 0 22%;
+  transform-origin: right center;
+  transform: rotateY(35deg);
+  z-index: 3;
+  border-radius: 2px 0 0 2px;
+}
+
+/* Center panel — flat, largest */
+.bay-panel-center {
+  flex: 0 0 56%;
+  z-index: 4;
+  border-left: none;
+  border-right: none;
+}
+
+/* Right angled panel — rotated inward (mirrored) */
+.bay-panel-right {
+  flex: 0 0 22%;
+  transform-origin: left center;
+  transform: rotateY(-35deg);
+  z-index: 3;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Glass */
+.bay-glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.08) 0%,
+    rgba(255,255,255,0.03) 50%,
+    rgba(135,206,235,0.06) 100%
+  );
+  overflow: hidden;
+}
+
+.bay-glass-center {
+  background: linear-gradient(
+    135deg,
+    rgba(135,206,235,0.1) 0%,
+    rgba(255,255,255,0.05) 40%,
+    rgba(135,206,235,0.08) 100%
+  );
+}
+
+/* Sill — follows the bay shape */
+.bay-sill {
+  position: absolute;
+  bottom: 14.5%;
+  left: 4%;
+  right: 4%;
+  height: 10px;
+  background: linear-gradient(180deg, #f5f0e8, #e8e2d8);
+  border-radius: 0 0 2px 2px;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.bay-sill-front {
+  position: absolute;
+  bottom: 13%;
+  left: 3%;
+  right: 3%;
+  height: 12px;
+  background: linear-gradient(180deg, #ede7db, #ddd5c5);
+  border-radius: 0 0 3px 3px;
+  z-index: 5;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
 /* ─── Awning Window Scene ─── */
 
 .aw-scene {
