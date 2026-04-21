@@ -6,6 +6,7 @@ module.exports = function (eleventyConfig) {
 
   // Pass-through static assets — watch: true ensures re-copy on change during dev
   eleventyConfig.addPassthroughCopy({ "src/images": "images" });
+  eleventyConfig.addPassthroughCopy({ "src/videos": "videos" });
   eleventyConfig.addPassthroughCopy({ "src/js": "js" }, { watch: true });
   eleventyConfig.addPassthroughCopy({ "src/css/styles.css": "css/styles.css" }, { watch: true });
   eleventyConfig.addPassthroughCopy({ "src/css/tailwind.css": "css/tailwind.css" }, { watch: true });

@@ -154,6 +154,39 @@ permalink: /windows/double-hung/
       </div>
     </section>
 
+    <!-- ─────────────── SCROLL VIDEO ─────────────── -->
+    <section class="scrub-section relative bg-brand-900" id="scrub-video-section" aria-label="Double hung window in action">
+      <!-- Sticky container that stays in view while user scrolls -->
+      <div class="scrub-sticky">
+        <video
+          id="scrub-video"
+          class="scrub-video"
+          src="/videos/double-hung-scrub.mp4"
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+        <!-- Overlay text that fades based on scroll progress -->
+        <div class="scrub-overlay" id="scrub-overlay">
+          <div class="scrub-text scrub-text-start" id="scrub-text-start">
+            <span class="font-heading font-bold text-2xl sm:text-3xl lg:text-4xl text-white">See it in action</span>
+          </div>
+          <div class="scrub-text scrub-text-end" id="scrub-text-end">
+            <span class="font-heading font-bold text-2xl sm:text-3xl lg:text-4xl text-white">Smooth. Effortless. Beautiful.</span>
+          </div>
+        </div>
+        <!-- Scroll hint -->
+        <div class="scrub-scroll-hint" id="scrub-hint">
+          <i data-lucide="chevrons-down" class="w-5 h-5 text-white/60 animate-bounce"></i>
+          <span class="text-xs text-white/40 font-medium mt-1">Scroll to play</span>
+        </div>
+        <!-- Progress bar -->
+        <div class="scrub-progress">
+          <div class="scrub-progress-bar" id="scrub-progress-bar"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ─────────────── WHAT IS A DOUBLE HUNG WINDOW ─────────────── -->
     <section class="py-20 lg:py-28 bg-white" aria-labelledby="what-heading">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

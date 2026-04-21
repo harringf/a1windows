@@ -24,6 +24,7 @@
     initCasementDemo();
     initSliderDemo();
     initAwningDemo();
+    initScrollVideo();
   });
 
   // ─── Navbar Scroll Shadow ───
@@ -714,6 +715,82 @@
     demo.addEventListener('mouseleave', function () {
       startAutoplay();
     });
+  }
+
+  // ─── Scroll-Driven Video Scrubbing ───
+  function initScrollVideo() {
+    var section = document.getElementById('scrub-video-section');
+    var video = document.getElementById('scrub-video');
+    if (!section || !video) return;
+
+    var progressBar = document.getElementById('scrub-progress-bar');
+    var textStart = document.getElementById('scrub-text-start');
+    var textEnd = document.getElementById('scrub-text-end');
+    var hint = document.getElementById('scrub-hint');
+    var isReady = false;
+    var ticking = false;
+    var lastProgress = -1;
+
+    // Wait for video metadata
+    video.addEventListener('loadedmetadata', function () {
+      isReady = true;
+      video.currentTime = 0;
+    });
+
+    // Force load on iOS
+    video.load();
+
+    function update() {
+      ticking = false;
+      if (!isReady) return;
+
+      var rect = section.getBoundingClientRect();
+      var sectionHeight = section.offsetHeight;
+      var viewportHeight = window.innerHeight;
+
+      var scrolled = -rect.top;
+      var scrollRange = sectionHeight - viewportHeight;
+      var progress = Math.max(0, Math.min(1, scrolled / scrollRange));
+
+      // Only seek if progress actually changed (avoid redundant seeks)
+      var rounded = Math.round(progress * 1000) / 1000;
+      if (rounded === lastProgress) return;
+      lastProgress = rounded;
+
+      // Map to video time
+      var targetTime = progress * video.duration;
+      if (isFinite(targetTime)) {
+        video.currentTime = targetTime;
+      }
+
+      // Progress bar
+      if (progressBar) {
+        progressBar.style.width = (progress * 100) + '%';
+      }
+
+      // Text fades
+      if (textStart) {
+        textStart.style.opacity = progress < 0.15 ? 1 - (progress / 0.15) : 0;
+      }
+      if (textEnd) {
+        textEnd.style.opacity = progress > 0.85 ? (progress - 0.85) / 0.15 : 0;
+      }
+
+      // Scroll hint
+      if (hint) {
+        hint.style.opacity = progress < 0.05 ? 1 : 0;
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
   }
 
   // ─── Scroll Reveal Animations ───
