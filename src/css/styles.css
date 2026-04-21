@@ -1158,30 +1158,68 @@ textarea:-webkit-autofill {
   object-fit: cover;
 }
 
-/* Text overlays */
+/* Content slides overlaid on video */
 .scrub-overlay {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 2;
   pointer-events: none;
 }
 
-.scrub-text {
+.scrub-slide {
   position: absolute;
-  text-align: center;
-  transition: opacity 0.3s ease;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
-}
-
-.scrub-text-start {
-  opacity: 1;
-}
-
-.scrub-text-end {
+  inset: 0;
+  display: flex;
+  align-items: center;
   opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.scrub-slide.scrub-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scrub-slide-content {
+  max-width: 480px;
+  padding: 0 2rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+/* Positioning variants */
+.scrub-slide-center {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.scrub-slide-left {
+  margin-left: 5%;
+}
+
+.scrub-slide-right {
+  margin-left: auto;
+  margin-right: 5%;
+}
+
+/* Frosted card for feature callouts */
+.scrub-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+@media (max-width: 767px) {
+  .scrub-slide-left,
+  .scrub-slide-right {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .scrub-slide-content {
+    padding: 0 1.5rem;
+  }
 }
 
 /* Scroll hint */

@@ -724,9 +724,8 @@
     if (!section || !video) return;
 
     var progressBar = document.getElementById('scrub-progress-bar');
-    var textStart = document.getElementById('scrub-text-start');
-    var textEnd = document.getElementById('scrub-text-end');
     var hint = document.getElementById('scrub-hint');
+    var slides = section.querySelectorAll('.scrub-slide');
     var isReady = false;
     var ticking = false;
     var lastProgress = -1;
@@ -768,13 +767,16 @@
         progressBar.style.width = (progress * 100) + '%';
       }
 
-      // Text fades
-      if (textStart) {
-        textStart.style.opacity = progress < 0.15 ? 1 - (progress / 0.15) : 0;
-      }
-      if (textEnd) {
-        textEnd.style.opacity = progress > 0.85 ? (progress - 0.85) / 0.15 : 0;
-      }
+      // Show/hide content slides based on scroll position
+      slides.forEach(function (slide) {
+        var inAt = parseFloat(slide.getAttribute('data-scrub-in'));
+        var outAt = parseFloat(slide.getAttribute('data-scrub-out'));
+        if (progress >= inAt && progress <= outAt) {
+          slide.classList.add('scrub-active');
+        } else {
+          slide.classList.remove('scrub-active');
+        }
+      });
 
       // Scroll hint
       if (hint) {

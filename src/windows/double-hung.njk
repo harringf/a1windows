@@ -166,14 +166,73 @@ permalink: /windows/double-hung/
           playsinline
           preload="auto"
         ></video>
-        <!-- Overlay text that fades based on scroll progress -->
+        <!-- Content slides overlaid on video -->
         <div class="scrub-overlay" id="scrub-overlay">
-          <div class="scrub-text scrub-text-start" id="scrub-text-start">
-            <span class="font-heading font-bold text-2xl sm:text-3xl lg:text-4xl text-white">See it in action</span>
+
+          <!-- Slide 1: 0–20% -->
+          <div class="scrub-slide" data-scrub-in="0" data-scrub-out="0.18">
+            <div class="scrub-slide-content scrub-slide-center">
+              <span class="font-heading font-semibold text-sm uppercase tracking-widest text-brand-300 mb-3 block">See it in action</span>
+              <span class="font-heading font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">The Double-Hung<br>Difference</span>
+            </div>
           </div>
-          <div class="scrub-text scrub-text-end" id="scrub-text-end">
-            <span class="font-heading font-bold text-2xl sm:text-3xl lg:text-4xl text-white">Smooth. Effortless. Beautiful.</span>
+
+          <!-- Slide 2: 20–40% -->
+          <div class="scrub-slide" data-scrub-in="0.22" data-scrub-out="0.38">
+            <div class="scrub-slide-content scrub-slide-left">
+              <div class="scrub-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 bg-brand-500/30 rounded-xl flex items-center justify-center">
+                    <i data-lucide="wind" class="w-5 h-5 text-brand-300"></i>
+                  </div>
+                  <span class="font-heading font-bold text-xl text-white">Superior Ventilation</span>
+                </div>
+                <p class="text-white/70 text-sm leading-relaxed">Both sashes slide independently — open the top to release warm air, the bottom to draw in cool breezes.</p>
+              </div>
+            </div>
           </div>
+
+          <!-- Slide 3: 40–60% -->
+          <div class="scrub-slide" data-scrub-in="0.42" data-scrub-out="0.58">
+            <div class="scrub-slide-content scrub-slide-right">
+              <div class="scrub-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 bg-green-500/30 rounded-xl flex items-center justify-center">
+                    <i data-lucide="zap" class="w-5 h-5 text-green-300"></i>
+                  </div>
+                  <span class="font-heading font-bold text-xl text-white">Energy Efficient</span>
+                </div>
+                <p class="text-white/70 text-sm leading-relaxed">ENERGY STAR certified with Low-E glass and argon gas fill. Save up to $583/year on energy bills.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4: 60–80% -->
+          <div class="scrub-slide" data-scrub-in="0.62" data-scrub-out="0.78">
+            <div class="scrub-slide-content scrub-slide-left">
+              <div class="scrub-card">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 bg-amber-500/30 rounded-xl flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-amber-300"></i>
+                  </div>
+                  <span class="font-heading font-bold text-xl text-white">Easy Tilt-In Cleaning</span>
+                </div>
+                <p class="text-white/70 text-sm leading-relaxed">Both sashes tilt inward so you can clean the exterior glass from inside your home — no ladders needed.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 5: 82–100% -->
+          <div class="scrub-slide" data-scrub-in="0.82" data-scrub-out="1.0">
+            <div class="scrub-slide-content scrub-slide-center">
+              <span class="font-heading font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-tight mb-6 block">Smooth. Effortless.<br>Beautiful.</span>
+              <a href="/#quote" data-quote-context="Double-Hung Windows" class="inline-flex items-center gap-2 bg-white text-brand-700 font-semibold text-base px-7 py-4 rounded-xl transition-all duration-300 hover:bg-accent-400 hover:text-brand-900 active:scale-[0.98]">
+                <i data-lucide="message-square" class="w-5 h-5"></i>
+                Get a Free Quote
+              </a>
+            </div>
+          </div>
+
         </div>
         <!-- Scroll hint -->
         <div class="scrub-scroll-hint" id="scrub-hint">
