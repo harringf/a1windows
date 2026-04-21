@@ -1167,7 +1167,7 @@ textarea:-webkit-autofill {
     inset 0 0 20px rgba(0,0,0,0.05);
   overflow: visible;
   perspective: 500px;
-  perspective-origin: 50% 30%;
+  perspective-origin: 50% 80%;
 }
 
 /* Sash — hinged at top, bottom swings outward */
@@ -1181,15 +1181,15 @@ textarea:-webkit-autofill {
               box-shadow 1.2s ease;
 }
 
-/* JS applies these */
+/* JS applies these — negative rotateX = bottom swings OUTWARD (away from viewer) */
 .aw-sash.aw-partial {
-  transform: rotateX(25deg);
-  box-shadow: 0 15px 25px -5px rgba(0,0,0,0.15);
+  transform: rotateX(-25deg);
+  box-shadow: 0 -8px 20px -5px rgba(0,0,0,0.1);
 }
 
 .aw-sash.aw-full {
-  transform: rotateX(42deg);
-  box-shadow: 0 25px 40px -8px rgba(0,0,0,0.25);
+  transform: rotateX(-42deg);
+  box-shadow: 0 -12px 30px -8px rgba(0,0,0,0.15);
 }
 
 /* Glass */
@@ -1229,11 +1229,19 @@ textarea:-webkit-autofill {
 .aw-rail-left { left: 0; }
 .aw-rail-right { right: 0; }
 
-/* Bottom rail thickens when tilted (visible from below) */
+/* Top surface of bottom rail visible when tilted outward */
 .aw-sash.aw-partial .aw-rail-bottom,
 .aw-sash.aw-full .aw-rail-bottom {
-  height: 10px;
-  background: linear-gradient(180deg, #e8e2d8 0%, #d6cfc3 50%, #c4bba8 100%);
+  height: 12px;
+  background: linear-gradient(180deg, #f5f0e8 0%, #e8e2d8 40%, #d6cfc3 100%);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.5);
+}
+
+/* Top rail (hinge side) thickens slightly */
+.aw-sash.aw-partial .aw-rail-top,
+.aw-sash.aw-full .aw-rail-top {
+  height: 8px;
+  background: linear-gradient(180deg, #d6cfc3 0%, #c4bba8 100%);
 }
 
 /* Handle */
@@ -1291,13 +1299,13 @@ textarea:-webkit-autofill {
   100% { transform: translateY(-28px) scaleY(0.5); opacity: 0; }
 }
 
-/* Rain drops */
+/* Rain drops — realistic, full coverage */
 .aw-rain {
   position: absolute;
   top: 0;
-  left: 10%;
-  right: 10%;
-  bottom: 40%;
+  left: 5%;
+  right: 5%;
+  bottom: 20%;
   z-index: 11;
   opacity: 0;
   transition: opacity 0.8s ease;
@@ -1310,25 +1318,50 @@ textarea:-webkit-autofill {
 
 .aw-drop {
   position: absolute;
-  width: 2px;
-  height: 12px;
-  background: linear-gradient(180deg, transparent, rgba(100,180,255,0.6));
-  border-radius: 0 0 2px 2px;
-  animation: aw-fall 1s linear infinite;
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent 0%, rgba(140,200,255,0.3) 30%, rgba(100,180,255,0.7) 100%);
+  border-radius: 0 0 1px 1px;
 }
 
-.aw-drop-1 { left: 10%; top: -5%;  animation-delay: 0s; }
-.aw-drop-2 { left: 30%; top: -8%;  animation-delay: 0.2s; }
-.aw-drop-3 { left: 50%; top: -3%;  animation-delay: 0.5s; }
-.aw-drop-4 { left: 70%; top: -7%;  animation-delay: 0.15s; }
-.aw-drop-5 { left: 85%; top: -4%;  animation-delay: 0.4s; }
-.aw-drop-6 { left: 20%; top: -10%; animation-delay: 0.7s; }
+/* Varying heights and speeds for realism */
+.aw-drop-1 { left: 5%;  height: 18px; animation: aw-fall-fast 0.7s linear infinite; animation-delay: 0s; }
+.aw-drop-2 { left: 15%; height: 14px; animation: aw-fall-med  0.9s linear infinite; animation-delay: 0.15s; }
+.aw-drop-3 { left: 22%; height: 20px; animation: aw-fall-fast 0.65s linear infinite; animation-delay: 0.4s; }
+.aw-drop-4 { left: 32%; height: 12px; animation: aw-fall-slow 1.1s linear infinite; animation-delay: 0.1s; }
+.aw-drop-5 { left: 40%; height: 16px; animation: aw-fall-med  0.85s linear infinite; animation-delay: 0.55s; }
+.aw-drop-6 { left: 48%; height: 22px; animation: aw-fall-fast 0.6s linear infinite; animation-delay: 0.25s; }
+.aw-drop-7 { left: 55%; height: 13px; animation: aw-fall-slow 1.0s linear infinite; animation-delay: 0.7s; }
+.aw-drop-8 { left: 63%; height: 19px; animation: aw-fall-fast 0.7s linear infinite; animation-delay: 0.35s; }
+.aw-drop-9 { left: 72%; height: 15px; animation: aw-fall-med  0.9s linear infinite; animation-delay: 0.5s; }
+.aw-drop-10 { left: 78%; height: 21px; animation: aw-fall-fast 0.65s linear infinite; animation-delay: 0.1s; }
+.aw-drop-11 { left: 85%; height: 11px; animation: aw-fall-slow 1.05s linear infinite; animation-delay: 0.6s; }
+.aw-drop-12 { left: 93%; height: 17px; animation: aw-fall-med  0.8s linear infinite; animation-delay: 0.3s; }
 
-@keyframes aw-fall {
-  0%   { transform: translateY(0);    opacity: 0; }
-  10%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateY(80px); opacity: 0; }
+/* Second layer — slightly offset for depth */
+.aw-drop-13 { left: 8%;  height: 10px; width: 1px; animation: aw-fall-slow 1.2s linear infinite; animation-delay: 0.45s; opacity: 0.5; }
+.aw-drop-14 { left: 28%; height: 9px;  width: 1px; animation: aw-fall-slow 1.15s linear infinite; animation-delay: 0.2s; opacity: 0.4; }
+.aw-drop-15 { left: 58%; height: 11px; width: 1px; animation: aw-fall-slow 1.1s linear infinite; animation-delay: 0.65s; opacity: 0.5; }
+.aw-drop-16 { left: 88%; height: 10px; width: 1px; animation: aw-fall-slow 1.25s linear infinite; animation-delay: 0.35s; opacity: 0.4; }
+
+@keyframes aw-fall-fast {
+  0%   { transform: translateY(-10px); opacity: 0; }
+  8%   { opacity: 1; }
+  85%  { opacity: 0.8; }
+  100% { transform: translateY(120px); opacity: 0; }
+}
+
+@keyframes aw-fall-med {
+  0%   { transform: translateY(-8px); opacity: 0; }
+  10%  { opacity: 0.8; }
+  85%  { opacity: 0.6; }
+  100% { transform: translateY(100px); opacity: 0; }
+}
+
+@keyframes aw-fall-slow {
+  0%   { transform: translateY(-5px); opacity: 0; }
+  12%  { opacity: 0.6; }
+  85%  { opacity: 0.4; }
+  100% { transform: translateY(85px); opacity: 0; }
 }
 
 /* ─── Slider Window Scene ─── */
