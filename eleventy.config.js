@@ -1,8 +1,35 @@
-const pluginRss = require("@11ty/eleventy-plugin-rss").default || require("@11ty/eleventy-plugin-rss");
+import pluginRss from "@11ty/eleventy-plugin-rss";
+import Image from "@11ty/eleventy-img";
+import path from "node:path";
 
-module.exports = function (eleventyConfig) {
+export default function (eleventyConfig) {
   // Plugins
   eleventyConfig.addPlugin(pluginRss);
+
+  // Responsive image shortcode — generates WebP + JPEG at multiple widths
+  eleventyConfig.addShortcode("image", async function (src, alt, sizes = "100vw", widths = [400, 800, 1200]) {
+    if (!alt) throw new Error(`Missing alt text for image: ${src}`);
+
+    const inputPath = src.startsWith("/")
+      ? path.join("src", src)
+      : src;
+
+    const metadata = await Image(inputPath, {
+      widths,
+      formats: ["webp", "jpeg"],
+      outputDir: "_site/images/optimized",
+      urlPath: "/images/optimized/",
+    });
+
+    const imageAttributes = {
+      alt,
+      sizes,
+      loading: "lazy",
+      decoding: "async",
+    };
+
+    return Image.generateHTML(metadata, imageAttributes);
+  });
 
   // Pass-through static assets — watch: true ensures re-copy on change during dev
   eleventyConfig.addPassthroughCopy({ "src/images": "images" });
@@ -42,4 +69,4 @@ module.exports = function (eleventyConfig) {
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
   };
-};
+}

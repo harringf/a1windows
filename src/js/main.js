@@ -54,40 +54,36 @@
 
     var isOpen = false;
 
-    toggle.addEventListener('click', function () {
-      isOpen = !isOpen;
-      toggle.setAttribute('aria-expanded', isOpen);
-      menu.setAttribute('aria-hidden', !isOpen);
+    function closeMenu() {
+      isOpen = false;
+      toggle.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+      toggle.classList.remove('menu-open');
+      menu.classList.remove('open');
+    }
 
+    toggle.addEventListener('click', function () {
       if (isOpen) {
+        closeMenu();
+      } else {
+        isOpen = true;
+        toggle.setAttribute('aria-expanded', 'true');
+        menu.setAttribute('aria-hidden', 'false');
         toggle.classList.add('menu-open');
         menu.classList.add('open');
-      } else {
-        toggle.classList.remove('menu-open');
-        menu.classList.remove('open');
       }
     });
 
     // Close on nav link click
     var mobileLinks = menu.querySelectorAll('a[href^="#"]');
     mobileLinks.forEach(function (link) {
-      link.addEventListener('click', function () {
-        isOpen = false;
-        toggle.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        toggle.classList.remove('menu-open');
-        menu.classList.remove('open');
-      });
+      link.addEventListener('click', closeMenu);
     });
 
     // Close on Escape key
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen) {
-        isOpen = false;
-        toggle.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        toggle.classList.remove('menu-open');
-        menu.classList.remove('open');
+        closeMenu();
         toggle.focus();
       }
     });
@@ -100,8 +96,11 @@
     if (!triggers.length) return;
 
     var openPanel = null;
+    var closeTimer = null;
+    var CLOSE_DELAY = 200; // ms grace period for mouse travel between trigger and panel
 
     function closeAll() {
+      clearTimeout(closeTimer);
       panels.forEach(function (p) {
         p.classList.add('hidden');
         p.classList.remove('open');
@@ -113,7 +112,33 @@
       openPanel = null;
     }
 
+    function openPanelFor(trigger) {
+      var panelId = trigger.getAttribute('aria-controls');
+      var panel = document.getElementById(panelId);
+      if (!panel) return;
+      if (openPanel === panel) return;
+
+      clearTimeout(closeTimer);
+      closeAll();
+      panel.classList.remove('hidden');
+      panel.offsetHeight; // force reflow so the transition plays
+      panel.classList.add('open');
+      trigger.classList.add('active');
+      trigger.setAttribute('aria-expanded', 'true');
+      openPanel = panel;
+    }
+
+    function scheduleClose() {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(closeAll, CLOSE_DELAY);
+    }
+
+    function cancelClose() {
+      clearTimeout(closeTimer);
+    }
+
     triggers.forEach(function (trigger) {
+      // Click toggles open/closed
       trigger.addEventListener('click', function () {
         var panelId = trigger.getAttribute('aria-controls');
         var panel = document.getElementById(panelId);
@@ -121,18 +146,23 @@
 
         if (openPanel === panel) {
           closeAll();
-          return;
+        } else {
+          openPanelFor(trigger);
         }
-
-        closeAll();
-        panel.classList.remove('hidden');
-        // Force reflow so the transition plays
-        panel.offsetHeight;
-        panel.classList.add('open');
-        trigger.classList.add('active');
-        trigger.setAttribute('aria-expanded', 'true');
-        openPanel = panel;
       });
+
+      // Hover opens (desktop only — touch devices fire click instead)
+      trigger.addEventListener('mouseenter', function () {
+        openPanelFor(trigger);
+      });
+
+      trigger.addEventListener('mouseleave', scheduleClose);
+    });
+
+    // Keep panel open while mouse is inside it, close when leaving
+    panels.forEach(function (panel) {
+      panel.addEventListener('mouseenter', cancelClose);
+      panel.addEventListener('mouseleave', scheduleClose);
     });
 
     // Close when clicking outside
@@ -183,98 +213,31 @@
     });
   }
 
-  // ─── Double Hung Window Interactive Demo ───
-  function initWindowDemo() {
-    var demo = document.getElementById('dh-demo');
+  // ─── Shared Window Demo Engine ───
+  // All window demos share the same autoplay, tab, and label logic.
+  // Each demo provides a config with its phase data and an applyPhase callback.
+  function createWindowDemo(config) {
+    var demo = document.getElementById(config.demoId);
     if (!demo) return;
 
-    var upper = document.getElementById('dh-upper');
-    var lower = document.getElementById('dh-lower');
-    var frame = lower.parentElement;
-    var tiltShadow = document.getElementById('dh-tilt-shadow');
-    var breezeBot = document.getElementById('dh-breeze-bot');
-    var breezeTop = document.getElementById('dh-breeze-top');
-    var label = document.getElementById('dh-label');
-    var labelNum = document.getElementById('dh-label-num');
-    var labelDesc = document.getElementById('dh-label-desc');
+    var label = document.getElementById(config.labelId);
+    var labelNum = document.getElementById(config.labelNumId);
+    var labelDesc = document.getElementById(config.labelDescId);
     var tabs = demo.querySelectorAll('.dh-tab');
-
-    var phases = [
-      {
-        num: '1',
-        desc: 'Bottom sash opens for fresh air',
-        lower: 'dh-open',
-        upper: '',
-        breezeBot: true,
-        breezeTop: false
-      },
-      {
-        num: '2',
-        desc: 'Top sash releases warm air',
-        lower: '',
-        upper: 'dh-open',
-        breezeBot: false,
-        breezeTop: true
-      },
-      {
-        num: '3',
-        desc: 'Both open for maximum airflow',
-        lower: 'dh-open',
-        upper: 'dh-open',
-        breezeBot: true,
-        breezeTop: true
-      },
-      {
-        num: '4',
-        desc: 'Tilts in for easy cleaning',
-        lower: 'dh-tilt',
-        upper: '',
-        breezeBot: false,
-        breezeTop: false
-      }
-    ];
 
     var current = 0;
     var timer = null;
-    var PHASE_DURATION = 5000; // 5 seconds per phase
+    var PHASE_DURATION = 5000;
 
     function setPhase(index) {
       current = index;
-      var phase = phases[index];
+      var phase = config.phases[index];
 
-      // Reset sash classes
-      lower.className = 'dh-sash dh-sash-lower';
-      upper.className = 'dh-sash dh-sash-upper';
-      frame.classList.remove('dh-frame-tilt');
-      tiltShadow.classList.remove('dh-visible');
-
-      // Apply after a frame so transitions fire
-      requestAnimationFrame(function () {
-        if (phase.lower) lower.classList.add(phase.lower);
-        if (phase.upper) upper.classList.add(phase.upper);
-        // Enable perspective on frame for tilt phase
-        if (phase.lower === 'dh-tilt') {
-          frame.classList.add('dh-frame-tilt');
-          tiltShadow.classList.add('dh-visible');
-        }
-      });
-
-      // Breeze
-      if (phase.breezeBot) {
-        breezeBot.classList.add('dh-visible');
-      } else {
-        breezeBot.classList.remove('dh-visible');
-      }
-      if (phase.breezeTop) {
-        breezeTop.classList.add('dh-visible');
-      } else {
-        breezeTop.classList.remove('dh-visible');
-      }
+      config.applyPhase(phase);
 
       // Label
       labelNum.textContent = phase.num;
       labelDesc.textContent = phase.desc;
-      // Quick hide then show for transition
       label.classList.remove('dh-visible');
       setTimeout(function () {
         label.classList.add('dh-visible');
@@ -286,7 +249,6 @@
         if (i === index) {
           tab.classList.add('active');
           tab.setAttribute('aria-selected', 'true');
-          // Reset and restart progress bar animation
           bar.style.animation = 'none';
           bar.offsetHeight; // force reflow
           bar.style.animation = '';
@@ -302,418 +264,162 @@
     function startAutoplay() {
       clearInterval(timer);
       timer = setInterval(function () {
-        setPhase((current + 1) % phases.length);
+        setPhase((current + 1) % config.phases.length);
       }, PHASE_DURATION);
     }
 
-    // Tab click handlers
     tabs.forEach(function (tab) {
       tab.addEventListener('click', function () {
-        var phaseIndex = parseInt(tab.getAttribute('data-phase'), 10);
+        var phaseIndex = parseInt(tab.getAttribute(config.phaseAttr), 10);
         setPhase(phaseIndex);
-        startAutoplay(); // Reset timer on manual interaction
+        startAutoplay();
       });
     });
 
-    // Start
     setPhase(0);
     startAutoplay();
 
-    // Pause on hover for desktop users who want to inspect
     demo.addEventListener('mouseenter', function () {
       clearInterval(timer);
     });
     demo.addEventListener('mouseleave', function () {
       startAutoplay();
+    });
+  }
+
+  // ─── Double Hung Window Interactive Demo ───
+  function initWindowDemo() {
+    var upper = document.getElementById('dh-upper');
+    var lower = document.getElementById('dh-lower');
+    if (!lower) return;
+    var frame = lower.parentElement;
+    var tiltShadow = document.getElementById('dh-tilt-shadow');
+    var breezeBot = document.getElementById('dh-breeze-bot');
+    var breezeTop = document.getElementById('dh-breeze-top');
+
+    createWindowDemo({
+      demoId: 'dh-demo',
+      labelId: 'dh-label',
+      labelNumId: 'dh-label-num',
+      labelDescId: 'dh-label-desc',
+      phaseAttr: 'data-phase',
+      phases: [
+        { num: '1', desc: 'Bottom sash opens for fresh air', lower: 'dh-open', upper: '', breezeBot: true, breezeTop: false },
+        { num: '2', desc: 'Top sash releases warm air', lower: '', upper: 'dh-open', breezeBot: false, breezeTop: true },
+        { num: '3', desc: 'Both open for maximum airflow', lower: 'dh-open', upper: 'dh-open', breezeBot: true, breezeTop: true },
+        { num: '4', desc: 'Tilts in for easy cleaning', lower: 'dh-tilt', upper: '', breezeBot: false, breezeTop: false }
+      ],
+      applyPhase: function (phase) {
+        lower.className = 'dh-sash dh-sash-lower';
+        upper.className = 'dh-sash dh-sash-upper';
+        frame.classList.remove('dh-frame-tilt');
+        tiltShadow.classList.remove('dh-visible');
+
+        requestAnimationFrame(function () {
+          if (phase.lower) lower.classList.add(phase.lower);
+          if (phase.upper) upper.classList.add(phase.upper);
+          if (phase.lower === 'dh-tilt') {
+            frame.classList.add('dh-frame-tilt');
+            tiltShadow.classList.add('dh-visible');
+          }
+        });
+
+        breezeBot.classList.toggle('dh-visible', phase.breezeBot);
+        breezeTop.classList.toggle('dh-visible', phase.breezeTop);
+      }
     });
   }
 
   // ─── Casement Window Interactive Demo ───
   function initCasementDemo() {
-    var demo = document.getElementById('cm-demo');
-    if (!demo) return;
-
     var left = document.getElementById('cm-left');
     var right = document.getElementById('cm-right');
     var breezeLeft = document.getElementById('cm-breeze-left');
     var breezeRight = document.getElementById('cm-breeze-right');
-    var label = document.getElementById('cm-label');
-    var labelNum = document.getElementById('cm-label-num');
-    var labelDesc = document.getElementById('cm-label-desc');
-    var tabs = demo.querySelectorAll('.dh-tab');
 
-    var phases = [
-      {
-        num: '1',
-        desc: 'Window sealed tight',
-        left: false,
-        right: false,
-        breezeL: false,
-        breezeR: false
-      },
-      {
-        num: '2',
-        desc: 'Left panel cranks open',
-        left: true,
-        right: false,
-        breezeL: true,
-        breezeR: false
-      },
-      {
-        num: '3',
-        desc: 'Right panel cranks open',
-        left: false,
-        right: true,
-        breezeL: false,
-        breezeR: true
-      },
-      {
-        num: '4',
-        desc: 'Both panels open for max airflow',
-        left: true,
-        right: true,
-        breezeL: true,
-        breezeR: true
+    createWindowDemo({
+      demoId: 'cm-demo',
+      labelId: 'cm-label',
+      labelNumId: 'cm-label-num',
+      labelDescId: 'cm-label-desc',
+      phaseAttr: 'data-cm-phase',
+      phases: [
+        { num: '1', desc: 'Window sealed tight', left: false, right: false, breezeL: false, breezeR: false },
+        { num: '2', desc: 'Left panel cranks open', left: true, right: false, breezeL: true, breezeR: false },
+        { num: '3', desc: 'Right panel cranks open', left: false, right: true, breezeL: false, breezeR: true },
+        { num: '4', desc: 'Both panels open for max airflow', left: true, right: true, breezeL: true, breezeR: true }
+      ],
+      applyPhase: function (phase) {
+        left.classList.toggle('cm-open', phase.left);
+        right.classList.toggle('cm-open', phase.right);
+        breezeLeft.classList.toggle('cm-visible', phase.breezeL);
+        breezeRight.classList.toggle('cm-visible', phase.breezeR);
       }
-    ];
-
-    var current = 0;
-    var timer = null;
-    var PHASE_DURATION = 5000;
-
-    function setPhase(index) {
-      current = index;
-      var phase = phases[index];
-
-      // Panels
-      if (phase.left) {
-        left.classList.add('cm-open');
-      } else {
-        left.classList.remove('cm-open');
-      }
-      if (phase.right) {
-        right.classList.add('cm-open');
-      } else {
-        right.classList.remove('cm-open');
-      }
-
-      // Breeze
-      if (phase.breezeL) {
-        breezeLeft.classList.add('cm-visible');
-      } else {
-        breezeLeft.classList.remove('cm-visible');
-      }
-      if (phase.breezeR) {
-        breezeRight.classList.add('cm-visible');
-      } else {
-        breezeRight.classList.remove('cm-visible');
-      }
-
-      // Label
-      labelNum.textContent = phase.num;
-      labelDesc.textContent = phase.desc;
-      label.classList.remove('dh-visible');
-      setTimeout(function () {
-        label.classList.add('dh-visible');
-      }, 150);
-
-      // Tabs
-      tabs.forEach(function (tab, i) {
-        var bar = tab.querySelector('.dh-tab-bar');
-        if (i === index) {
-          tab.classList.add('active');
-          tab.setAttribute('aria-selected', 'true');
-          bar.style.animation = 'none';
-          bar.offsetHeight;
-          bar.style.animation = '';
-        } else {
-          tab.classList.remove('active');
-          tab.setAttribute('aria-selected', 'false');
-          bar.style.animation = 'none';
-          bar.style.width = '0%';
-        }
-      });
-    }
-
-    function startAutoplay() {
-      clearInterval(timer);
-      timer = setInterval(function () {
-        setPhase((current + 1) % phases.length);
-      }, PHASE_DURATION);
-    }
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        var phaseIndex = parseInt(tab.getAttribute('data-cm-phase'), 10);
-        setPhase(phaseIndex);
-        startAutoplay();
-      });
-    });
-
-    setPhase(0);
-    startAutoplay();
-
-    demo.addEventListener('mouseenter', function () {
-      clearInterval(timer);
-    });
-    demo.addEventListener('mouseleave', function () {
-      startAutoplay();
     });
   }
 
   // ─── Slider Window Interactive Demo ───
   function initSliderDemo() {
-    var demo = document.getElementById('sl-demo');
-    if (!demo) return;
-
     var left = document.getElementById('sl-left');
     var right = document.getElementById('sl-right');
     var breezeLeft = document.getElementById('sl-breeze-left');
     var breezeRight = document.getElementById('sl-breeze-right');
-    var label = document.getElementById('sl-label');
-    var labelNum = document.getElementById('sl-label-num');
-    var labelDesc = document.getElementById('sl-label-desc');
-    var tabs = demo.querySelectorAll('.dh-tab');
 
-    var phases = [
-      {
-        num: '1',
-        desc: 'Window closed',
-        leftClass: '',
-        rightClass: '',
-        breezeL: false,
-        breezeR: false
-      },
-      {
-        num: '2',
-        desc: 'Right panel slides left to open',
-        leftClass: '',
-        rightClass: 'sl-open-left',
-        breezeL: false,
-        breezeR: true
-      },
-      {
-        num: '3',
-        desc: 'Left panel slides right to open',
-        leftClass: 'sl-open-right',
-        rightClass: '',
-        breezeL: true,
-        breezeR: false
-      },
-      {
-        num: '4',
-        desc: 'Both panels slide open for max airflow',
-        leftClass: 'sl-open-right',
-        rightClass: 'sl-open-left',
-        breezeL: true,
-        breezeR: true
+    createWindowDemo({
+      demoId: 'sl-demo',
+      labelId: 'sl-label',
+      labelNumId: 'sl-label-num',
+      labelDescId: 'sl-label-desc',
+      phaseAttr: 'data-sl-phase',
+      phases: [
+        { num: '1', desc: 'Window closed', leftClass: '', rightClass: '', breezeL: false, breezeR: false },
+        { num: '2', desc: 'Right panel slides left to open', leftClass: '', rightClass: 'sl-open-left', breezeL: false, breezeR: true },
+        { num: '3', desc: 'Left panel slides right to open', leftClass: 'sl-open-right', rightClass: '', breezeL: true, breezeR: false },
+        { num: '4', desc: 'Both panels slide open for max airflow', leftClass: 'sl-open-right', rightClass: 'sl-open-left', breezeL: true, breezeR: true }
+      ],
+      applyPhase: function (phase) {
+        left.classList.remove('sl-open-right');
+        right.classList.remove('sl-open-left');
+
+        requestAnimationFrame(function () {
+          if (phase.leftClass) left.classList.add(phase.leftClass);
+          if (phase.rightClass) right.classList.add(phase.rightClass);
+        });
+
+        breezeLeft.classList.toggle('cm-visible', phase.breezeL);
+        breezeRight.classList.toggle('cm-visible', phase.breezeR);
       }
-    ];
-
-    var current = 0;
-    var timer = null;
-    var PHASE_DURATION = 5000;
-
-    function setPhase(index) {
-      current = index;
-      var phase = phases[index];
-
-      // Reset panel classes
-      left.classList.remove('sl-open-right');
-      right.classList.remove('sl-open-left');
-
-      // Apply after a frame
-      requestAnimationFrame(function () {
-        if (phase.leftClass) left.classList.add(phase.leftClass);
-        if (phase.rightClass) right.classList.add(phase.rightClass);
-      });
-
-      // Breeze
-      if (phase.breezeL) {
-        breezeLeft.classList.add('cm-visible');
-      } else {
-        breezeLeft.classList.remove('cm-visible');
-      }
-      if (phase.breezeR) {
-        breezeRight.style.opacity = '1';
-      } else {
-        breezeRight.style.opacity = '0';
-      }
-
-      // Label
-      labelNum.textContent = phase.num;
-      labelDesc.textContent = phase.desc;
-      label.classList.remove('dh-visible');
-      setTimeout(function () {
-        label.classList.add('dh-visible');
-      }, 150);
-
-      // Tabs
-      tabs.forEach(function (tab, i) {
-        var bar = tab.querySelector('.dh-tab-bar');
-        if (i === index) {
-          tab.classList.add('active');
-          tab.setAttribute('aria-selected', 'true');
-          bar.style.animation = 'none';
-          bar.offsetHeight;
-          bar.style.animation = '';
-        } else {
-          tab.classList.remove('active');
-          tab.setAttribute('aria-selected', 'false');
-          bar.style.animation = 'none';
-          bar.style.width = '0%';
-        }
-      });
-    }
-
-    function startAutoplay() {
-      clearInterval(timer);
-      timer = setInterval(function () {
-        setPhase((current + 1) % phases.length);
-      }, PHASE_DURATION);
-    }
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        var phaseIndex = parseInt(tab.getAttribute('data-sl-phase'), 10);
-        setPhase(phaseIndex);
-        startAutoplay();
-      });
-    });
-
-    setPhase(0);
-    startAutoplay();
-
-    demo.addEventListener('mouseenter', function () {
-      clearInterval(timer);
-    });
-    demo.addEventListener('mouseleave', function () {
-      startAutoplay();
     });
   }
 
   // ─── Awning Window Interactive Demo ───
   function initAwningDemo() {
-    var demo = document.getElementById('aw-demo');
-    if (!demo) return;
-
     var sash = document.getElementById('aw-sash');
     var breeze = document.getElementById('aw-breeze');
     var rain = document.getElementById('aw-rain');
-    var label = document.getElementById('aw-label');
-    var labelNum = document.getElementById('aw-label-num');
-    var labelDesc = document.getElementById('aw-label-desc');
-    var tabs = demo.querySelectorAll('.dh-tab');
 
-    var phases = [
-      {
-        num: '1',
-        desc: 'Window sealed tight',
-        sashClass: '',
-        breeze: false,
-        rain: false
-      },
-      {
-        num: '2',
-        desc: 'Partially open for gentle airflow',
-        sashClass: 'aw-partial',
-        breeze: true,
-        rain: false
-      },
-      {
-        num: '3',
-        desc: 'Fully open for maximum ventilation',
-        sashClass: 'aw-full',
-        breeze: true,
-        rain: false
-      },
-      {
-        num: '4',
-        desc: 'Stays open in rain — glass deflects water',
-        sashClass: 'aw-full',
-        breeze: true,
-        rain: true
+    createWindowDemo({
+      demoId: 'aw-demo',
+      labelId: 'aw-label',
+      labelNumId: 'aw-label-num',
+      labelDescId: 'aw-label-desc',
+      phaseAttr: 'data-aw-phase',
+      phases: [
+        { num: '1', desc: 'Window sealed tight', sashClass: '', breeze: false, rain: false },
+        { num: '2', desc: 'Partially open for gentle airflow', sashClass: 'aw-partial', breeze: true, rain: false },
+        { num: '3', desc: 'Fully open for maximum ventilation', sashClass: 'aw-full', breeze: true, rain: false },
+        { num: '4', desc: 'Stays open in rain — glass deflects water', sashClass: 'aw-full', breeze: true, rain: true }
+      ],
+      applyPhase: function (phase) {
+        sash.classList.remove('aw-partial', 'aw-full');
+
+        requestAnimationFrame(function () {
+          if (phase.sashClass) sash.classList.add(phase.sashClass);
+        });
+
+        breeze.classList.toggle('aw-visible', phase.breeze);
+        rain.classList.toggle('aw-visible', phase.rain);
       }
-    ];
-
-    var current = 0;
-    var timer = null;
-    var PHASE_DURATION = 5000;
-
-    function setPhase(index) {
-      current = index;
-      var phase = phases[index];
-
-      // Reset sash
-      sash.classList.remove('aw-partial', 'aw-full');
-
-      requestAnimationFrame(function () {
-        if (phase.sashClass) sash.classList.add(phase.sashClass);
-      });
-
-      // Breeze
-      if (phase.breeze) {
-        breeze.classList.add('aw-visible');
-      } else {
-        breeze.classList.remove('aw-visible');
-      }
-
-      // Rain
-      if (phase.rain) {
-        rain.classList.add('aw-visible');
-      } else {
-        rain.classList.remove('aw-visible');
-      }
-
-      // Label
-      labelNum.textContent = phase.num;
-      labelDesc.textContent = phase.desc;
-      label.classList.remove('dh-visible');
-      setTimeout(function () {
-        label.classList.add('dh-visible');
-      }, 150);
-
-      // Tabs
-      tabs.forEach(function (tab, i) {
-        var bar = tab.querySelector('.dh-tab-bar');
-        if (i === index) {
-          tab.classList.add('active');
-          tab.setAttribute('aria-selected', 'true');
-          bar.style.animation = 'none';
-          bar.offsetHeight;
-          bar.style.animation = '';
-        } else {
-          tab.classList.remove('active');
-          tab.setAttribute('aria-selected', 'false');
-          bar.style.animation = 'none';
-          bar.style.width = '0%';
-        }
-      });
-    }
-
-    function startAutoplay() {
-      clearInterval(timer);
-      timer = setInterval(function () {
-        setPhase((current + 1) % phases.length);
-      }, PHASE_DURATION);
-    }
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        var phaseIndex = parseInt(tab.getAttribute('data-aw-phase'), 10);
-        setPhase(phaseIndex);
-        startAutoplay();
-      });
-    });
-
-    setPhase(0);
-    startAutoplay();
-
-    demo.addEventListener('mouseenter', function () {
-      clearInterval(timer);
-    });
-    demo.addEventListener('mouseleave', function () {
-      startAutoplay();
     });
   }
 
@@ -853,9 +559,57 @@
         });
 
         // Update URL without jumping
-        history.pushState(null, null, targetId);
+        history.pushState(null, '', targetId);
       });
     });
+  }
+
+  // ─── Shared Quote Form Submission ───
+  function submitQuoteForm(form, els) {
+    var formData = {
+      name: form.querySelector(els.nameId).value.trim(),
+      phone: form.querySelector(els.phoneId).value.trim(),
+      email: form.querySelector(els.emailId).value.trim(),
+      message: form.querySelector(els.messageId).value.trim()
+    };
+
+    if (!formData.name || !formData.phone || !formData.email) return;
+
+    els.submitBtn.disabled = true;
+    els.submitText.textContent = 'Sending...';
+    els.submitIcon.classList.add('hidden');
+    els.spinner.classList.remove('hidden');
+    els.errorEl.classList.add('hidden');
+
+    fetch('/api/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Request failed');
+        return response.json();
+      })
+      .then(function () {
+        if (els.onSuccess) {
+          els.onSuccess();
+        } else {
+          form.reset();
+          els.successEl.classList.remove('hidden');
+          resetSubmitButton(els);
+        }
+      })
+      .catch(function () {
+        els.errorEl.classList.remove('hidden');
+        resetSubmitButton(els);
+      });
+  }
+
+  function resetSubmitButton(els) {
+    els.submitBtn.disabled = false;
+    els.submitText.textContent = 'Get Your Free Quote';
+    els.submitIcon.classList.remove('hidden');
+    els.spinner.classList.add('hidden');
   }
 
   // ─── Quote Modal (Drawer / Bottom Sheet) ───
@@ -885,17 +639,14 @@
       drawer.setAttribute('aria-hidden', 'false');
       document.body.classList.add('quote-open');
 
-      // Pre-fill context into message field
       if (context && messageField && !messageField.value.trim()) {
         messageField.value = 'Interested in: ' + context;
       }
 
-      // Re-init lucide icons in the modal
       if (typeof lucide !== 'undefined') {
         lucide.createIcons();
       }
 
-      // Focus first input after transition
       setTimeout(function () {
         var firstInput = form.querySelector('input');
         if (firstInput) firstInput.focus();
@@ -915,43 +666,32 @@
         autoCloseTimer = null;
       }
 
-      // Reset form after close transition
       setTimeout(function () {
         form.reset();
         form.classList.remove('hidden');
         successEl.classList.add('hidden');
         errorEl.classList.add('hidden');
-        submitBtn.disabled = false;
-        submitText.textContent = 'Get Your Free Quote';
-        submitIcon.classList.remove('hidden');
-        spinner.classList.add('hidden');
+        resetSubmitButton({ submitBtn: submitBtn, submitText: submitText, submitIcon: submitIcon, spinner: spinner });
       }, 400);
     }
 
-    // Close button
     closeBtn.addEventListener('click', closeModal);
-
-    // Backdrop click
     backdrop.addEventListener('click', closeModal);
 
-    // Escape key
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen) {
         closeModal();
       }
     });
 
-    // Intercept all quote links
     document.addEventListener('click', function (e) {
       var link = e.target.closest('a[href="/#quote"], a[href="#quote"], [data-open-quote]');
       if (!link) return;
 
       e.preventDefault();
 
-      // Get context from data attribute or from page title
       var context = link.getAttribute('data-quote-context') || '';
       if (!context) {
-        // Auto-detect from page — if on a product page, use the h1 text
         var h1 = document.querySelector('h1');
         var isProductPage = window.location.pathname.indexOf('/windows/') !== -1 ||
                             window.location.pathname.indexOf('/doors/') !== -1;
@@ -963,39 +703,20 @@
       openModal(context);
     });
 
-    // Form submission
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      var formData = {
-        name: form.querySelector('#qm-name').value.trim(),
-        phone: form.querySelector('#qm-phone').value.trim(),
-        email: form.querySelector('#qm-email').value.trim(),
-        message: form.querySelector('#qm-message').value.trim()
-      };
-
-      if (!formData.name || !formData.phone || !formData.email) return;
-
-      // Loading state
-      submitBtn.disabled = true;
-      submitText.textContent = 'Sending...';
-      submitIcon.classList.add('hidden');
-      spinner.classList.remove('hidden');
-      errorEl.classList.add('hidden');
-
-      var API_URL = '/api/quote';
-
-      fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-        .then(function (response) {
-          if (!response.ok) throw new Error('Request failed');
-          return response.json();
-        })
-        .then(function () {
-          // Success — show thank you
+      submitQuoteForm(form, {
+        nameId: '#qm-name',
+        phoneId: '#qm-phone',
+        emailId: '#qm-email',
+        messageId: '#qm-message',
+        submitBtn: submitBtn,
+        submitText: submitText,
+        submitIcon: submitIcon,
+        spinner: spinner,
+        successEl: successEl,
+        errorEl: errorEl,
+        onSuccess: function () {
           form.classList.add('hidden');
           successEl.classList.remove('hidden');
 
@@ -1003,17 +724,9 @@
             lucide.createIcons();
           }
 
-          // Auto-close after 4 seconds
           autoCloseTimer = setTimeout(closeModal, 4000);
-        })
-        .catch(function () {
-          // Error
-          errorEl.classList.remove('hidden');
-          submitBtn.disabled = false;
-          submitText.textContent = 'Get Your Free Quote';
-          submitIcon.classList.remove('hidden');
-          spinner.classList.add('hidden');
-        });
+        }
+      });
     });
 
     // Mobile: swipe down to dismiss
@@ -1022,7 +735,6 @@
     var isDragging = false;
 
     drawer.addEventListener('touchstart', function (e) {
-      // Only allow drag from the top area (drag handle or header)
       var touch = e.touches[0];
       var rect = drawer.getBoundingClientRect();
       if (touch.clientY - rect.top < 60) {
@@ -1056,74 +768,28 @@
     });
   }
 
-  // ─── Quote Form Submission ───
+  // ─── Quote Form Submission (inline form on homepage) ───
   function initQuoteForm() {
     var form = document.getElementById('quote-form');
     if (!form) return;
 
-    var submitBtn = document.getElementById('quote-submit');
-    var submitText = document.getElementById('submit-text');
-    var submitIcon = document.getElementById('submit-icon');
-    var submitSpinner = document.getElementById('submit-spinner');
-    var successMsg = document.getElementById('form-success');
-    var errorMsg = document.getElementById('form-error');
+    var els = {
+      nameId: '#quote-name',
+      phoneId: '#quote-phone',
+      emailId: '#quote-email',
+      messageId: '#quote-message',
+      submitBtn: document.getElementById('quote-submit'),
+      submitText: document.getElementById('submit-text'),
+      submitIcon: document.getElementById('submit-icon'),
+      spinner: document.getElementById('submit-spinner'),
+      successEl: document.getElementById('form-success'),
+      errorEl: document.getElementById('form-error')
+    };
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      // Gather form data
-      var formData = {
-        name: form.querySelector('#quote-name').value.trim(),
-        phone: form.querySelector('#quote-phone').value.trim(),
-        email: form.querySelector('#quote-email').value.trim(),
-        message: form.querySelector('#quote-message').value.trim(),
-      };
-
-      // Basic validation
-      if (!formData.name || !formData.phone || !formData.email) {
-        return;
-      }
-
-      // Show loading state
-      submitBtn.disabled = true;
-      submitText.textContent = 'Sending...';
-      submitIcon.classList.add('hidden');
-      submitSpinner.classList.remove('hidden');
-      successMsg.classList.add('hidden');
-      errorMsg.classList.add('hidden');
-
-      // ── API CALL ──
-      // Replace this URL with your actual API endpoint
-      var API_URL = '/api/quote';
-
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-        .then(function (response) {
-          if (!response.ok) throw new Error('Request failed');
-          return response.json();
-        })
-        .then(function () {
-          // Success
-          form.reset();
-          successMsg.classList.remove('hidden');
-          submitBtn.disabled = false;
-          submitText.textContent = 'Get Your Free Quote';
-          submitIcon.classList.remove('hidden');
-          submitSpinner.classList.add('hidden');
-        })
-        .catch(function () {
-          // Error
-          errorMsg.classList.remove('hidden');
-          submitBtn.disabled = false;
-          submitText.textContent = 'Get Your Free Quote';
-          submitIcon.classList.remove('hidden');
-          submitSpinner.classList.add('hidden');
-        });
+      els.successEl.classList.add('hidden');
+      submitQuoteForm(form, els);
     });
   }
 })();

@@ -5,6 +5,18 @@
    patterns, and component-specific styles.
    ═══════════════════════════════════════════ */
 
+/* ─── Brand color tokens (mirrors tailwind.config.js) ─── */
+:root {
+  --color-brand-500: #2563eb;
+  --color-brand-800: #1e3a5f;
+  --color-brand-900: #0f172a;
+  --color-frame: #f5f0e8;
+  --color-frame-dark: #e8e2d8;
+  --color-frame-shadow: #d6cfc3;
+  --color-hardware: #b8a88a;
+  --color-hardware-dark: #a0926e;
+}
+
 /* ─── Base ─── */
 html {
   scroll-behavior: smooth;
@@ -23,10 +35,10 @@ body {
 .hero-gradient {
   background: linear-gradient(
     135deg,
-    #0f172a 0%,
-    #1e3a5f 35%,
+    var(--color-brand-900) 0%,
+    var(--color-brand-800) 35%,
     #1e40af 65%,
-    #2563eb 100%
+    var(--color-brand-500) 100%
   );
 }
 
@@ -55,7 +67,7 @@ body {
 
 /* ─── Brand gradient for "Windows" wordmark ─── */
 .text-gradient-brand {
-  background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #93c5fd 100%);
+  background: linear-gradient(135deg, var(--color-brand-500) 0%, #60a5fa 50%, #93c5fd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -141,17 +153,12 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-/* ─── Service card image placeholder sizes ─── */
-.h-18 {
-  height: 4.5rem;
-}
-
 /* ─── Focus styles ─── */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--color-brand-500);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -162,18 +169,18 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #f8fafc inset;
-  -webkit-text-fill-color: #0f172a;
+  -webkit-text-fill-color: var(--color-brand-900);
   transition: background-color 5000s ease-in-out 0s;
 }
 
 /* ─── Smooth hover for service cards ─── */
-.service-card {
+.service-card:hover {
   will-change: transform, box-shadow;
 }
 
 /* ─── Selection color ─── */
 ::selection {
-  background-color: #2563eb;
+  background-color: var(--color-brand-500);
   color: white;
 }
 
@@ -192,7 +199,7 @@ textarea:-webkit-autofill {
 }
 
 .mega-trigger.active {
-  color: #2563eb !important;
+  color: var(--color-brand-500) !important;
   background: #eff6ff !important;
 }
 
@@ -752,7 +759,7 @@ textarea:-webkit-autofill {
 }
 
 .dh-tab.active .dh-tab-num {
-  background: #2563eb;
+  background: var(--color-brand-500);
   color: white;
 }
 
@@ -785,7 +792,7 @@ textarea:-webkit-autofill {
   display: block;
   height: 100%;
   width: 0%;
-  background: #2563eb;
+  background: var(--color-brand-500);
   border-radius: 0 0 12px 12px;
   transition: width 0.1s linear;
 }
@@ -1249,7 +1256,7 @@ textarea:-webkit-autofill {
 .scrub-progress-bar {
   height: 100%;
   width: 0%;
-  background: #2563eb;
+  background: var(--color-brand-500);
   transition: width 0.05s linear;
 }
 
@@ -1903,13 +1910,13 @@ textarea:-webkit-autofill {
   border: 1.5px solid #e2e8f0;
   border-radius: 12px;
   font-size: 0.9375rem;
-  color: #1e3a5f;
+  color: var(--color-brand-800);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .qm-input:focus {
-  border-color: #2563eb;
+  border-color: var(--color-brand-500);
   box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
 }
 
@@ -1950,7 +1957,7 @@ textarea:-webkit-autofill {
 .qm-float:not(:placeholder-shown) + .qm-label {
   top: 6px;
   transform: translateY(0) scale(0.75);
-  color: #2563eb;
+  color: var(--color-brand-500);
   font-weight: 500;
 }
 

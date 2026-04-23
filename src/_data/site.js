@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   title: "A1 Windows",
   tagline: "Window & Door Replacement in Marietta, GA",
   description:
